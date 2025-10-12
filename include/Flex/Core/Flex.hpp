@@ -10,7 +10,7 @@
 #include <unordered_map>
 
 #include <tinyxml2/tinyxml2.h>
-#include <Flex/Core/PathFinder.hpp>
+#include <Flex/Filesystem/PathFinder.hpp>
 
 #include <SFML/Window/Event.hpp>
 

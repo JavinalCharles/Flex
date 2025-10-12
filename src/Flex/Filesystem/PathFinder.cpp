@@ -1,4 +1,4 @@
-#include <Flex/Core/PathFinder.hpp>
+#include <Flex/Filesystem/PathFinder.hpp>
 #include <iostream>
 
 using namespace Flex;
