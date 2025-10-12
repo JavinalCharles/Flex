@@ -1,9 +1,25 @@
 #pragma once
 
-#include "tinyxml2/tinyxml2.h"
-#include "Flex/Core/PathFinder.hpp"
+#include <chrono>
+#include <filesystem>
+#include <optional>
+#include <string>
+#include <system_error>
+#include <variant>
+#include <thread>
+#include <unordered_map>
+
+#include <tinyxml2/tinyxml2.h>
+#include <Flex/Core/PathFinder.hpp>
+
+#include <SFML/Window/Event.hpp>
+
+#include "flex/Utility/Utility.hpp"
+#include "Flex/Window/Window.hpp"
 
 namespace fs = std::filesystem;
+using Flex::Window;
+
 
 namespace Flex {
 
@@ -42,15 +58,24 @@ public:
 	void run();
 
 	PathFinder& getPF();
-private:
+	const PathFinder getPF() const;
+private: // GAME LOOP
 	void handleEvents();
-	void update(float dt);
-	void postUpdate(float dt);
+	void update(double dt);
+	void postUpdate(double dt);
 	void draw();
+
+private: // HELPERS
+	void readAndMapConfigs(const fs::path& configPath);
+	void resetConfigDefaults();
 
 	void cleanUp();
 private:
+	bool m_isRunning = false;
+	Window m_window;
 	PathFinder m_pf;
+	configMap m_config;
+	tinyxml2::XMLDocument m_xmlDoc;
 }; // class Engine
 
 } // namespace Flex

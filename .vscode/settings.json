@@ -1,5 +1,6 @@
 {
 	"files.associations": {
+		"*.embeddedhtml": "html",
 		"typeinfo": "cpp",
 		"system_error": "cpp",
 		"array": "cpp",
@@ -59,7 +60,30 @@
 		"cinttypes": "cpp",
 		"typeindex": "cpp",
 		"variant": "cpp",
-		"iostream": "cpp"
+		"iostream": "cpp",
+		"filesystem": "cpp",
+		"forward_list": "cpp",
+		"ios": "cpp",
+		"locale": "cpp",
+		"xfacet": "cpp",
+		"xiosbase": "cpp",
+		"xlocale": "cpp",
+		"xlocbuf": "cpp",
+		"xlocinfo": "cpp",
+		"xlocmes": "cpp",
+		"xlocmon": "cpp",
+		"xlocnum": "cpp",
+		"xloctime": "cpp",
+		"xmemory": "cpp",
+		"xstring": "cpp",
+		"xtr1common": "cpp",
+		"xutility": "cpp",
+		"list": "cpp",
+		"xhash": "cpp"
 	},
-	"telemetry.feedback.enabled": false
+	"telemetry.feedback.enabled": false,
+	"C_Cpp.default.includePath": [
+		"${workspaceFolder}/include"
+	],
+	"C_Cpp.errorSquiggles": "enabled"
 }
