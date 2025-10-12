@@ -1,0 +1,59 @@
+# Global ignores for build artifacts, OS files, and IDE metadata
+
+# Build directories
+out/
+build/
+cmake-build-debug/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Compiled object files, libraries, executables
+*.o
+*.obj
+*.lib
+*.a
+*.so
+*.dll
+*.exe
+*.pdb
+*.ilk
+
+# Generated files
+*.cmake
+*.ninja
+*.vcxproj*
+*.sln
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Temporary files
+*~
+*.swp
+*.swo
+._*
+
+# C++/Clang tidy, coverage
+coverage/
+*.gcda
+*.gcno
+
+# Package managers
+node_modules/
+
+# editor settings
+.vscode/
+.vs/
+
+# Keep LICENSE and README
+!LICENSE
+!README.md
