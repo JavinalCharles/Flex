@@ -97,6 +97,21 @@ void Flex::handleEvents() {
 	}
 }
 
+void Flex::update(double dt) {
+	// Update game logic here
+}
+
+void Flex::postUpdate(double dt) {
+	// Post-update logic here
+}
+
+void Flex::draw() {
+	sf::RenderWindow& window = m_window.getRenderWindow();
+	window.clear(sf::Color::Black);
+	// Draw your game objects here
+	window.display();
+}
+
 
 void Flex::resetConfigDefaults() {
 	std::string temp = m_config.contains("title") ? std::get<std::string>(m_config["title"]) : "Flex App";

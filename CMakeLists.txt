@@ -19,6 +19,8 @@ if(DEBUG)
 	endif()
 endif()
 
+add_compile_definitions(SFML_STATIC)
+
 # Project-wide C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -45,6 +47,70 @@ target_include_directories(Flex
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 )
+
+target_link_directories(Flex 
+	PUBLIC
+		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+		$<INSTALL_INTERFACE:lib>
+)
+
+# --- Statically link SFML libraries from the project's lib/ directory ---
+set(FLEX_LIB_DIR "${PROJECT_SOURCE_DIR}/lib")
+
+function(add_static_lib_alias alias libname)
+	# Creates an IMPORTED STATIC target named alias that points to libname (full path)
+	add_library(${alias} STATIC IMPORTED)
+	set_target_properties(${alias} PROPERTIES
+		IMPORTED_LOCATION "${libname}"
+	)
+endfunction()
+
+# Helper to pick debug vs release filename suffixes used in this repo (e.g. sfml-graphics-d.lib)
+set(_sfml_suffix "")
+if(MSVC)
+	# We will assume the project provides both debug (`-d`) and release libs without `-s` suffix.
+	set(_sfml_debug_suffix "-d")
+	set(_sfml_release_suffix "")
+else()
+	set(_sfml_debug_suffix "-d")
+	set(_sfml_release_suffix "")
+endif()
+
+# Map of SFML components we need
+set(_sfml_components system window graphics audio network)
+
+foreach(_comp IN LISTS _sfml_components)
+	# Build candidate filenames for release and debug
+	set(_release_lib "${FLEX_LIB_DIR}/sfml-${_comp}${_sfml_release_suffix}.lib")
+	set(_debug_lib    "${FLEX_LIB_DIR}/sfml-${_comp}${_sfml_debug_suffix}.lib")
+
+	# Prefer exact file if present
+	if(EXISTS ${_release_lib})
+		add_static_lib_alias(SFML::${_comp} ${_release_lib})
+	elseif(EXISTS ${_debug_lib})
+		add_static_lib_alias(SFML::${_comp} ${_debug_lib})
+	else()
+		message(WARNING "Could not find SFML library for component: ${_comp} in ${FLEX_LIB_DIR}")
+	endif()
+endforeach()
+
+# Also add sfml-main if present (useful for Windows applications)
+if(EXISTS "${FLEX_LIB_DIR}/sfml-main.lib" )
+	add_static_lib_alias(SFML::main "${FLEX_LIB_DIR}/sfml-main.lib")
+elseif(EXISTS "${FLEX_LIB_DIR}/sfml-main-d.lib")
+	add_static_lib_alias(SFML::main "${FLEX_LIB_DIR}/sfml-main-d.lib")
+endif()
+
+# Link SFML to Flex. SFML types are exposed in headers, so keep PUBLIC to propagate to consumers.
+target_link_libraries(Flex
+	PUBLIC
+		SFML::graphics
+		SFML::window
+		SFML::audio
+		SFML::network
+		SFML::system
+)
+
 
 # Use modern CMake feature requirement
 target_compile_features(Flex PUBLIC cxx_std_20)
