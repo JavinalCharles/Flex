@@ -1,57 +1,81 @@
-#include <Flex/Event/KeyEventHandler.hpp>
+#include "Flex/Event/KeyEventHandler.hpp"
 
+using Flex::EventHandler;
+using Flex::ID_t;
 using Flex::KeyEventHandler;
 
-KeyEventHandler::KeyEventHandler() = default;
+KeyEventHandler::KeyEventHandler() 
+    : EventHandler() 
+{
+}
+
 KeyEventHandler::~KeyEventHandler() = default;
 
-int KeyEventHandler::computeIndex(int key, std::uint16_t mods) const {
-    if (key < 0 || key >= MAX_KEYS || (mods & ~MOD_MASK)) return -1; // Invalid modifier bits
-    return (static_cast<int>(mods) << 8) | key;
+ID_t KeyEventHandler::registerKeyPressedCallback(KeyPressedCallback callback) {
+    m_keyPressedCallbacks.push_back(std::move(callback));
+    return static_cast<ID_t>(m_keyPressedCallbacks.size() - 1);
 }
 
-void KeyEventHandler::registerKeyPress(sf::Keyboard::Key key, KeyCallback callback, std::uint16_t mods) {
-    int index = computeIndex(static_cast<int>(key), mods);
-    if (index != -1) {
-        m_keyPressCallbacks[index].push_back(std::move(callback));
+ID_t KeyEventHandler::registerKeyReleasedCallback(KeyReleasedCallback callback) {
+    m_keyReleasedCallbacks.push_back(std::move(callback));
+    return static_cast<ID_t>(m_keyReleasedCallbacks.size() - 1);
+}
+
+void KeyEventHandler::bindKeyPress(int key, ID_t callbackID) {
+    if (key < 0 || key >= MAX_KEYS || callbackID >= static_cast<ID_t>(m_keyPressedCallbacks.size())) {
+        return;
     }
+    m_keyPressBindings[key].push_back(callbackID);
 }
 
-void KeyEventHandler::registerKeyRelease(sf::Keyboard::Key key, KeyCallback callback, std::uint16_t mods) {
-    int index = computeIndex(static_cast<int>(key), mods);
-    if (index != -1) {
-        m_keyReleaseCallbacks[index].push_back(std::move(callback));
+void KeyEventHandler::bindKeyPress(int key, KeyPressedCallback callback) {
+    ID_t callbackID = registerKeyPressedCallback(std::move(callback));
+    bindKeyPress(key, callbackID);
+}
+
+void KeyEventHandler::bindKeyRelease(int key, ID_t callbackID) {
+    if (key < 0 || key >= MAX_KEYS || callbackID >= static_cast<ID_t>(m_keyReleasedCallbacks.size())) {
+        return;
     }
+    m_keyReleaseBindings[key].push_back(callbackID);
 }
 
-void KeyEventHandler::handleKeyPressed(const sf::Event::KeyPressed* e) {
-    if (!e) return;
-    std::uint16_t mods = MOD_NONE;
-    if (e->shift) mods |= MOD_SHIFT;
-    if (e->control) mods |= MOD_CTRL;
-    if (e->alt) mods |= MOD_ALT;
-    if (e->system) mods |= MOD_SUPER;
+void KeyEventHandler::bindKeyRelease(int key, KeyReleasedCallback callback) {
+    ID_t callbackID = registerKeyReleasedCallback(std::move(callback));
+    bindKeyRelease(key, callbackID);
+}
 
-    int index = computeIndex(static_cast<int>(e->code), mods);
-    if (index != -1) {
-        for (const auto& callback : m_keyPressCallbacks[index]) {
-            if (callback) callback();
+std::vector<std::type_index> KeyEventHandler::getEventTypes() const {
+    return std::vector<std::type_index>{
+        std::type_index(typeid(sf::Event::KeyPressed)),
+        std::type_index(typeid(sf::Event::KeyReleased))
+    };
+}
+
+void KeyEventHandler::handleEvent(const sf::Event& event) {
+    event.visit(this);
+}
+
+void KeyEventHandler::operator()(const sf::Event::KeyPressed& event) {
+    int key = static_cast<int>(event.code);
+    if (key < 0 || key >= MAX_KEYS) {
+        return;
+    }
+    for (ID_t callbackID : m_keyPressBindings[key]) {
+        if (callbackID < static_cast<ID_t>(m_keyPressedCallbacks.size())) {
+            m_keyPressedCallbacks[callbackID](event);
         }
     }
 }
 
-void KeyEventHandler::handleKeyReleased(const sf::Event::KeyReleased* e) {
-    if (!e) return;
-    std::uint16_t mods = MOD_NONE;
-    if (e->shift) mods |= MOD_SHIFT;
-    if (e->control) mods |= MOD_CTRL;
-    if (e->alt) mods |= MOD_ALT;
-    if (e->system) mods |= MOD_SUPER;
-
-    int index = computeIndex(static_cast<int>(e->code), mods);
-    if (index != -1) {
-        for (const auto& callback : m_keyReleaseCallbacks[index]) {
-            if (callback) callback();
+void KeyEventHandler::operator()(const sf::Event::KeyReleased& event) {
+    int key = static_cast<int>(event.code);
+    if (key < 0 || key >= MAX_KEYS) {
+        return;
+    }
+    for (ID_t callbackID : m_keyReleaseBindings[key]) {
+        if (callbackID < static_cast<ID_t>(m_keyReleasedCallbacks.size())) {
+            m_keyReleasedCallbacks[callbackID](event);
         }
     }
 }
