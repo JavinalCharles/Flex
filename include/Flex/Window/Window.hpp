@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "Flex/Utility/Utility.hpp"
+#include "Flex/Utilities/Utility.hpp"
 
 namespace Flex {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Flex/Event/EventManager.hpp"
+#include "Flex/Events/EventManager.hpp"
 
 namespace Flex {
 

@@ -10,16 +10,15 @@
 #include <unordered_map>
 
 #include <tinyxml2/tinyxml2.h>
-#include <Flex/Filesystem/PathFinder.hpp>
+#include <Flex/Filesystems/PathFinder.hpp>
 
 #include <SFML/Window/Event.hpp>
 
-#include "flex/Utility/Utility.hpp"
+#include "Flex/Utilities/Utility.hpp"
 #include "Flex/Window/Window.hpp"
 
 namespace fs = std::filesystem;
 using Flex::Window;
-
 
 namespace Flex {
 

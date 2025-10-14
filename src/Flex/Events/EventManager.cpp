@@ -1,4 +1,4 @@
-#include "Flex/Event/EventManager.hpp"
+#include "Flex/Events/EventManager.hpp"
 
 using Flex::EventHandler;
 using Flex::EventManager;

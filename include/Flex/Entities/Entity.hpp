@@ -7,9 +7,9 @@
 
 #include <SFML/Graphics/Transformable.hpp>
 
-#include <Flex/Component/Component.hpp>
-#include <Flex/Entity/SharedContext.hpp>
-#include <Flex/Utility/Utility.hpp>
+#include <Flex/Components/Component.hpp>
+#include <Flex/Entities/SharedContext.hpp>
+#include <Flex/Utilities/Utility.hpp>
 
 namespace Flex {
 
