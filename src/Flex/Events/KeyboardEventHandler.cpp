@@ -21,26 +21,26 @@ ID_t KeyboardEventHandler::registerKeyReleasedCallback(KeyReleasedCallback callb
     return static_cast<ID_t>(m_keyReleasedCallbacks.size() - 1);
 }
 
-void KeyboardEventHandler::bindKeyPress(int key, ID_t callbackID) {
+void KeyboardEventHandler::bindKeyPress(ID_t key, ID_t callbackID) {
     if (key < 0 || key >= MAX_KEYS || callbackID >= static_cast<ID_t>(m_keyPressedCallbacks.size())) {
         return;
     }
     m_keyPressBindings[key].push_back(callbackID);
 }
 
-void KeyboardEventHandler::bindKeyPress(int key, KeyPressedCallback callback) {
+void KeyboardEventHandler::bindKeyPress(ID_t key, KeyPressedCallback callback) {
     ID_t callbackID = registerKeyPressedCallback(std::move(callback));
     bindKeyPress(key, callbackID);
 }
 
-void KeyboardEventHandler::bindKeyRelease(int key, ID_t callbackID) {
+void KeyboardEventHandler::bindKeyRelease(ID_t key, ID_t callbackID) {
     if (key < 0 || key >= MAX_KEYS || callbackID >= static_cast<ID_t>(m_keyReleasedCallbacks.size())) {
         return;
     }
     m_keyReleaseBindings[key].push_back(callbackID);
 }
 
-void KeyboardEventHandler::bindKeyRelease(int key, KeyReleasedCallback callback) {
+void KeyboardEventHandler::bindKeyRelease(ID_t key, KeyReleasedCallback callback) {
     ID_t callbackID = registerKeyReleasedCallback(std::move(callback));
     bindKeyRelease(key, callbackID);
 }

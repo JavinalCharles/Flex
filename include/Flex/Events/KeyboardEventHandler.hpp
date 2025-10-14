@@ -15,7 +15,7 @@ class KeyboardEventHandler : public EventHandler {
 public:
     using KeyPressedCallback = std::function<void(const sf::Event::KeyPressed&)>;
     using KeyReleasedCallback = std::function<void(const sf::Event::KeyReleased&)>;
-    static constexpr int MAX_KEYS = 255;
+    static constexpr ID_t MAX_KEYS = 256u;
 
     KeyboardEventHandler();
     KeyboardEventHandler(const KeyboardEventHandler&) = delete;
@@ -27,11 +27,11 @@ public:
     ID_t registerKeyPressedCallback(KeyPressedCallback callback);
     ID_t registerKeyReleasedCallback(KeyReleasedCallback callback);
 
-    void bindKeyPress(int key, ID_t callbackID);
-    void bindKeyPress(int key, KeyPressedCallback callback);
+    void bindKeyPress(ID_t key, ID_t callbackID);
+    void bindKeyPress(ID_t key, KeyPressedCallback callback);
 
-    void bindKeyRelease(int key, ID_t callbackID);
-    void bindKeyRelease(int key, KeyReleasedCallback callback);
+    void bindKeyRelease(ID_t key, ID_t callbackID);
+    void bindKeyRelease(ID_t key, KeyReleasedCallback callback);
 
     virtual std::vector<std::type_index> getEventTypes() const override;
     virtual void handleEvent(const sf::Event& event) override;
