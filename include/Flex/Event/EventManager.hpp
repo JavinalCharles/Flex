@@ -11,6 +11,9 @@
 
 namespace Flex {
 
+template <typename E>
+concept EventHandlerType = std::derived_from<EventHandler, E>;
+
 class EventManager {
 public:
     EventManager();
@@ -20,11 +23,36 @@ public:
     EventManager& operator=(EventManager&&) = delete;
     virtual ~EventManager();
 
-    void addEventHandler(std::shared_ptr<EventHandler> handler);
+    template <EventHandlerType E>
+    std::shared_ptr<EventHandler> getEventHandler() const {
+        std::type_index index(typeid(E));
+        if (m_eventHandlers.contains(index)) {
+            return m_eventHandlers.at(index);
+        }
+        return nullptr;
+    }
 
-    void handleEvents(const sf::RenderWindow& window);
+    template <EventHandlerType E>
+    std::shared_ptr<EventHandler> addEventHandler() {
+        std::type_index index(typeid(E));
+        if (m_eventHandlers.contains(index))
+            return m_eventHandlers.at(index);
+
+        std::shared_ptr<EventHandler> handler = std::make_shared<E>();
+        if )(handler == nullptr) 
+            return nullptr;
+
+        for (const auto& eventType : handler->getEventTypes()) {
+            m_eventToHandlerMap[eventType] = index;
+        }
+        m_eventHandlers[index] = handler;
+        return handler;
+    }
+
+    void handleEvents(sf::RenderWindow& window);
 private:
-    std::vector<std::shared_ptr<EventManager>> m_eventHandlers;
+    std::unordered_map<std::type_index, std::type_index> m_eventToHandlerMap{};
+    std::unordered_map<std::type_index, std::shared_ptr<EventHandler>> m_eventHandlers{};
 }; // class EventManager
 
 } // namespace Flex
