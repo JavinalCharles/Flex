@@ -52,30 +52,25 @@ std::vector<std::type_index> KeyboardEventHandler::getEventTypes() const {
     };
 }
 
-void KeyboardEventHandler::handleEvent(const sf::Event& event) {
-    event.visit(this);
+bool KeyboardEventHandler::handleEvent(const sf::Event::KeyPressed& event) {
+	ID_t key = static_cast<ID_t>(event.code);
+	if (key >= MAX_KEYS) return false;
+
+	for (ID_t callbackID : m_keyPressBindings.at(key)) {
+		if (callbackID >= static_cast<ID_t>(m_keyPressedCallbacks.size()))
+			continue;
+		m_keyPressedCallbacks.at(callbackID)(event);
+	}
+	return true;
 }
 
-void KeyboardEventHandler::operator()(const sf::Event::KeyPressed& event) {
-    int key = static_cast<int>(event.code);
-    if (key < 0 || key >= MAX_KEYS) {
-        return;
-    }
-    for (ID_t callbackID : m_keyPressBindings[key]) {
-        if (callbackID < static_cast<ID_t>(m_keyPressedCallbacks.size())) {
-            m_keyPressedCallbacks[callbackID](event);
-        }
-    }
-}
-
-void KeyboardEventHandler::operator()(const sf::Event::KeyReleased& event) {
-    int key = static_cast<int>(event.code);
-    if (key < 0 || key >= MAX_KEYS) {
-        return;
-    }
-    for (ID_t callbackID : m_keyReleaseBindings[key]) {
-        if (callbackID < static_cast<ID_t>(m_keyReleasedCallbacks.size())) {
-            m_keyReleasedCallbacks[callbackID](event);
-        }
-    }
+bool KeyboardEventHandler::handleEvent(const sf::Event::KeyReleased& event) {
+	ID_t key = static_cast<int>(event.code);
+	if (key >= MAX_KEYS) return false;
+	for (ID_t callbackID : m_keyReleaseBindings[key]) {
+		if (callbackID >= static_cast<ID_t>(m_keyReleasedCallbacks.size())) 
+			continue;
+		m_keyReleasedCallbacks[callbackID](event);
+	}
+	return true;
 }

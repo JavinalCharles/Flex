@@ -11,11 +11,12 @@
 
 namespace Flex {
 
-template <typename E>
-concept EventHandlerType = std::derived_from<EventHandler, E>;
+template <typename T>
+concept EventHandlerType = std::derived_from<EventHandler, T>;
 
 class EventManager {
 public:
+
     EventManager();
     EventManager(const EventManager&) = delete;
     EventManager(EventManager&&) = delete;
@@ -24,7 +25,17 @@ public:
     virtual ~EventManager();
 
     template <EventHandlerType E>
-    std::shared_ptr<EventHandler> getEventHandler() const {
+    [[nodiscard]] bool hasEventHandler() const {
+        return m_eventHandlers.contains(std::type_index(typeid(E)));
+    }
+
+    template <EventType T>
+    [[nodiscard]] bool hasEventHandlerForEvent() const {
+        return m_eventToHandlerMap.contains(std::type_index(typeid(T)));
+    }
+
+    template <EventHandlerType E>
+    [[nodiscard]] std::shared_ptr<EventHandler> getEventHandler() const {
         std::type_index index(typeid(E));
         if (m_eventHandlers.contains(index)) {
             return m_eventHandlers.at(index);
@@ -49,7 +60,16 @@ public:
         return handler;
     }
 
-    void handleEvents(sf::RenderWindow& window);
+    template <EventType ET>
+    void handleEvent(const ET& event) {
+        const std::type_index& eventID = std::type_index(typeid(ET));
+        try {
+            m_eventHandlers.at(m_eventToHandlerMap.at(std::type_index(typeid(ET))))->handleEvent(event);
+        }
+        catch (const std::out_of_range& e) {
+            std::cerr << "std::out_of_range caught at EventManager::handleEvent: \"" << e.what() << "\"" << std::endl;
+        }
+    }
 private:
     std::unordered_map<std::type_index, std::type_index> m_eventToHandlerMap{};
     std::unordered_map<std::type_index, std::shared_ptr<EventHandler>> m_eventHandlers{};

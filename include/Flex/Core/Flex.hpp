@@ -11,6 +11,7 @@
 
 #include <tinyxml2/tinyxml2.h>
 #include <Flex/Filesystems/PathFinder.hpp>
+#include <Flex/Scenes/SceneManager.hpp>
 
 #include <SFML/Window/Event.hpp>
 
@@ -71,9 +72,12 @@ private: // HELPERS
 	void cleanUp();
 private:
 	bool m_isRunning = false;
+
 	Window m_window;
+	SceneManager m_sceneManager;
 	PathFinder m_pf;
 	configMap m_config;
+
 	tinyxml2::XMLDocument m_xmlDoc;
 }; // class Engine
 

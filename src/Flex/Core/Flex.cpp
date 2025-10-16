@@ -94,6 +94,9 @@ void Flex::handleEvents() {
 			m_window.close();
 			break;
 		}
+		else {
+			m_sceneManager.handleEvents(event.value());
+		}
 	}
 }
 
