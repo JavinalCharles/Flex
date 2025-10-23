@@ -6,47 +6,61 @@
 #include "Flex/Events/Types/Event.hpp"
 
 namespace Flex {
-	template <typename T>
-	concept SF_MOUSE_BUTTON_EVENT = 
-		std::is_same_v<T, sf::Event::MouseButtonPressed> ||
-		std::is_same_v<T, sf::Event::MouseButtonReleased>;
+	struct MouseButtonPressedEvent : public Event<MouseButtonPressedEvent> {
+		ID_t			button{};
+		sf::Vector2i 	position{};
 
-	template <SF_MOUSE_BUTTON_EVENT T>
-	struct MouseButtonEvent : public Event<MouseButtonEvent<T>> {
-		ID_t 		button{};
-		sf::Vector2i	position{};
-
-		MouseButtonEvent() : Event<MouseButtonEvent<T>>() {}
-
-		MouseButtonEvent(ID_t btn, const Vector2i& pos) : 
-			Event<MouseButtonEvent<T>>(),
-			button(btn),
-			position(pos)
+		constexpr MouseButtonPressedEvent() : Event<MouseButtonPressedEvent>()
 		{ }
-
-		MouseButtonEvent(const T& e) :
-			Event<MouseButtonEvent<T>>(),
-			button(e.button),
-			position(e.position)
+		constexpr MouseButtonPressedEvent(ID_t i_button, const sf::Vector2i& pos) : 
+			Event<MouseButtonPressedEvent>(), button(i_button), position(pos)
 		{ }
+		constexpr MouseButtonPressedEvent(ID_t button, int x, int y) : 
+			Event<MouseButtonPressedEvent>(), button(button), position(x, y)
+		{ }
+		constexpr MouseButtonPressedEvent(const sf::Event::MouseButtonPressed& sfe) : 
+			Event<MouseButtonPressedEvent>(),
+			button(static_cast<ID_t>(sfe.button)),
+			position(sfe.position)
+		{ }
+	}; // struct MouseButtonPressedEvent
 
-		std::string message() const {
-			return std::string("[") + std::to_string(button) + "; (" + std::to_string(position.x) + ", " + std::to_string(position.y) + ")]";
-		}
-	}; // struct MouseButtonEvent
+
+	struct MouseButtonReleasedEvent : public Event<MouseButtonReleasedEvent> {
+		ID_t			button{};
+		sf::Vector2i 	position{};
+
+		constexpr MouseButtonReleasedEvent() : Event<MouseButtonReleasedEvent>()
+		{ }
+		constexpr MouseButtonReleasedEvent(ID_t i_button, const sf::Vector2i& pos) : 
+			Event<MouseButtonReleasedEvent>(), button(i_button), position(pos)
+		{ }
+		constexpr MouseButtonReleasedEvent(ID_t button, int x, int y) : 
+			Event<MouseButtonReleasedEvent>(), button(button), position(x, y)
+		{ }
+		constexpr MouseButtonReleasedEvent(const sf::Event::MouseButtonReleased& sfe) : 
+			Event<MouseButtonReleasedEvent>(),
+			button(static_cast<ID_t>(sfe.button)),
+			position(sfe.position)
+		{ }
+	}; // struct MouseButtonReleasedEvent
+
 
 	struct MouseWheelScrolledEvent : public Event<MouseWheelScrolledEvent> {
 		ID_t 			wheel{};
 		float			delta{};
 		sf::Vector2i 	position{};
 
-		MouseWheelScrolledEvent();
-		// MouseWheelScrolledEvent(ID_t wheel, float delta, const sf::Vector2i& pos);
-		MouseWheelScrolledEvent(const sf::Event::MouseWheelScrolled& e);
-
-		std::string message() const;
-	}; // struct MouseWheelScrolled
-
-	using MouseButtonPressedEvent = MouseButtonEvent<sf::Event::MouseButtonPressed>;
-	using MouseButtonReleasedEvent = MouseButtonEvent<sf::Event::MouseButtonReleased>;
+		constexpr MouseWheelScrolledEvent() : Event<MouseWheelScrolledEvent>() { }
+		constexpr MouseWheelScrolledEvent(ID_t i_wheel, float dt, const sf::Vector2i& pos) :
+			Event<MouseWheelScrolledEvent>(),
+			wheel(i_wheel), delta(dt), position(pos)
+		{ }
+		constexpr MouseWheelScrolledEvent(const sf::Event::MouseWheelScrolled& sfe) :
+			Event<MouseWheelScrolledEvent>(),
+			wheel(static_cast<ID_t>(sfe.wheel)),
+			delta(sfe.delta),
+			position(sfe.position)
+		{ }
+	};
 } // namespace Flex

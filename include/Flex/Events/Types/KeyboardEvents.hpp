@@ -12,37 +12,47 @@ namespace Flex {
 		SYSTEM_MOD	= 0B1000
 	};
 
-	template <typename T>
-	concept SF_KEY_EVENT = std::is_same_v<T, sf::Event::KeyPressed> || std::is_same_v<T, sf::Event::KeyReleased>;
-
-	template <SF_KEY_EVENT>
-	struct KeyboardEvent : public Events<KeyboardEvent<SF_KEYEVENT>> {
-		ID_t			code{};
+	struct KeyPressedEvent : public Event<KeyPressedEvent> {
+		ID_t 			code{};
 		ID_t			scancode{};
-		std::uint8_t 	modifiers{};
+		std::uint8_t	modifiers{};
 
-		KeyboardEvent() : 
-			Event<KeyboardEvent<SF_KEY_EVENT>>() {}
-		KeyboardEvent(ID_t code, ID_t scancode, std::uint8_t modifiers) :
-			Event<KeyboardEvent<SF_KEY_EVENT>>(),
-			code(code), scancode(scancode), modifiers(modifiers)
+		constexpr KeyPressedEvent() : Event<KeyPressedEvent>() { }
+		constexpr KeyPressedEvent(ID_t i_code, ID_t i_scancode, std::uint8_t mod) :
+			Event<KeyPressedEvent>(),
+			code(i_code), scancode(i_scancode), modifiers(mod)
 		{ }
-		KeyboardEvent(const T& e) :
-			Event<KeyboardEvent<T>>(),
-			code(static_cast<ID_t>(e.code)),
-			scancode(static_cast<ID_t>(e.scancode)),
+		constexpr KeyPressedEvent(const sf::Event::KeyPressed& sfe) :
+			Event<KeyPressedEvent>(),
+			code(static_cast<ID_t>(sfe.code)), scancode(static_cast<ID_t>(sfe.scancode)),
 			modifiers(
-				(e.alt ? ALT_MOD : NO_MOD) | 
-				(e.control ? CTRL_MOD : NO_MOD) |
-				(e.shift ? SHIFT_MOD : NO_MOD) |
-				(e.system ? SYSTEM_MOD : NO_MOD))
+				(sfe.alt ? ALT_MOD : NO_MOD) | 
+				(sfe.control ? CTRL_MOD : NO_MOD) |
+				(sfe.shift ? SHIFT_MOD : NO_MOD) |
+				(sfe.system ? SYSTEM_MOD : NO_MOD)
+			)
 		{ }
+	}; // struct KeyPressedEvent
 
-		std::string message() const {
-			return std::string("[") + std::to_string(code) + "; " + std::string(scancode) + ": " + std::string(modifiers) + "]";
-		}
-	}; // struct KeyboardEvent
+	struct KeyReleasedEvent : public Event<KeyReleasedEvent> {
+		ID_t 			code{};
+		ID_t			scancode{};
+		std::uint8_t	modifiers{};
 
-	using KeyPressedEvent = KeyboardEvent<sf::Event::KeyPressed>;
-	using KeyReleasedEvent = KeyboardEvent<sf::Event::KeyReleased>;
+		constexpr KeyReleasedEvent() : Event<KeyReleasedEvent>() { }
+		constexpr KeyReleasedEvent(ID_t i_code, ID_t i_scancode, std::uint8_t mod) :
+			Event<KeyReleasedEvent>(),
+			code(i_code), scancode(i_scancode), modifiers(mod)
+		{ }
+		constexpr KeyReleasedEvent(const sf::Event::KeyReleased& sfe) :
+			Event<KeyReleasedEvent>(),
+			code(static_cast<ID_t>(sfe.code)), scancode(static_cast<ID_t>(sfe.scancode)),
+			modifiers(
+				(sfe.alt ? ALT_MOD : NO_MOD) | 
+				(sfe.control ? CTRL_MOD : NO_MOD) |
+				(sfe.shift ? SHIFT_MOD : NO_MOD) |
+				(sfe.system ? SYSTEM_MOD : NO_MOD)
+			)
+		{ }
+	}; // struct KeyReleasedEvent
 } // namespace Flex
