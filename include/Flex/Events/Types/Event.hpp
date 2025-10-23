@@ -19,4 +19,7 @@ namespace Flex {
 			return std::string_view(typeid(Derived).name());
 		}
 	}; // struct Event
+
+	template <typename T>
+	concept EventType = std::derived_from<T, EventBase> && !std::is_same_v<T, EventBase>;
 } // namespace Flex
