@@ -12,20 +12,22 @@ public:
     SceneBase();
     virtual ~SceneBase();
 
-    virtual void onCreate();
-    virtual void onDestroy();
+    void create();
+    void destroy();
 
-    virtual void onActivate();
-    virtual void onDeactivate();
+    void activate();
+    void deactivate();
 
-    virtual void onHandleEvents(double dt) = 0;
+	virtual void onCreate() = 0;
+	virtual void onDestroy() = 0;
+	virtual void onActiviate() = 0;
+	virtual void onDeactivate() = 0;
 
 protected:
     virtual void handleEvent(const sf::Event& event);
     virtual void update(double dt);
     virtual void postUpdate(double dt);
     virtual void draw(Window& window);
-
 protected:
     std::vector<std::shared_ptr<SceneBase>> m_subScenes;
 }; // class SceneBase
