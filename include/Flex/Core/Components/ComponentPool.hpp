@@ -14,7 +14,7 @@ namespace Flex {
 	}; // class ComponentPoolInterface
 
 	template <ComponentType CT>
-	class ComponentPool : ComponentPoolInterface {
+	class ComponentPool : public ComponentPoolInterface {
 		public:
 			ComponentPool() : ComponentPoolInterface() {}
 			virtual ~ComponentPool() = default;

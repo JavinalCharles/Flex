@@ -1,35 +1,48 @@
 #pragma once
 
+#include <concepts>
 #include <memory>
+#include <type_traits>
 #include <vector>
 
-#include "Flex/Window/Window.hpp"
+#include <SFML/Graphics/RenderWindow.hpp>
+
+#include "Flex/Events/EventManager.hpp"
 
 namespace Flex {
 
-class SceneBase {
-public:
-    SceneBase();
-    virtual ~SceneBase();
+	class SceneBase {
+		public:
+			friend class SceneManager;
+			SceneBase();
+			virtual ~SceneBase();
 
-    void create();
-    void destroy();
+			virtual void onCreate();
+			virtual void onDestroy();
+			virtual void onActivate();
+			virtual void onDeactivate();
+			virtual void onUpdate(double dt);
+			virtual void onPostUpdate(double dt);
+			virtual void onDraw(sf::RenderWindow& win);
 
-    void activate();
-    void deactivate();
+			void create();
+			void destroy();
+			void activate();
+			void deactivate();
 
-	virtual void onCreate() = 0;
-	virtual void onDestroy() = 0;
-	virtual void onActiviate() = 0;
-	virtual void onDeactivate() = 0;
+			void update(double dt);
+			void postUpdate(double dt);
+			void draw(sf::RenderWindow& win);
 
-protected:
-    virtual void handleEvent(const sf::Event& event);
-    virtual void update(double dt);
-    virtual void postUpdate(double dt);
-    virtual void draw(Window& window);
-protected:
-    std::vector<std::shared_ptr<SceneBase>> m_subScenes;
-}; // class SceneBase
+			template <EventType ET>
+			void handleEvent(const ET& event) {
+				m_eventManager.post(ET);
+			}
+		protected:
+			EventManager							m_eventManager;
+			std::vector<std::shared_ptr<SceneBase>> m_childScenes;
+	}; // class SceneBase
 
+	template <typename T>
+	concept SceneType = std::derived_from<T, SceneBase> && !std::is_same_v<T, SceneBase>;
 } // namespace Flex
