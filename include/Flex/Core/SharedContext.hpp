@@ -11,8 +11,14 @@ struct SharedContext {
 	SceneManager* sceneManager = nullptr;
 	Window* window = nullptr;
 
-	SharedContext();
-	SharedContext(const SharedContext& other);
+	constexpr SharedContext() = default;
+	constexpr SharedContext(const SharedContext& other) :
+		eventManager(other.eventManager),
+		sceneManager(other.sceneManager),
+		window(other.window)
+	{
+
+	}
 	SharedContext& operator=(const SharedContext& other);
 }; // struct SharedContext
 

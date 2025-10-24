@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Flex/Utilities/Utility.hpp"
+#include <cstddef>
 
 namespace Flex {
-	using EntityID = ID_t;
+	using EntityID = std::size_t;
 } // namespace Flex

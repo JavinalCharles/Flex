@@ -5,15 +5,15 @@
 
 using namespace Flex;
 
-SharedContext::SharedContext() = default;
+// SharedContext::SharedContext() = default;
 
-SharedContext::SharedContext(const SharedContext& other) :
-    eventManager(other.eventManager),
-    sceneManager(other.sceneManager),
-    window(other.window)
-{
+// SharedContext::SharedContext(const SharedContext& other) :
+//     eventManager(other.eventManager),
+//     sceneManager(other.sceneManager),
+//     window(other.window)
+// {
     
-}
+// }
 
 SharedContext& SharedContext::operator=(const SharedContext& other) {
     if (this == &other)
