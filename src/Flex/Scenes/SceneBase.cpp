@@ -14,7 +14,7 @@ void SceneBase::onDeactivate() { }
 
 void SceneBase::onUpdate(double dt) { }
 void SceneBase::onPostUpdate(double dt) { }
-void SceneBase::onDraw(sf::RenderWindow& win) { }
+void SceneBase::onDraw(Window& win) { }
 
 void SceneBase::create() {
 	this->onCreate();
@@ -64,7 +64,7 @@ void SceneBase::postUpdate(double dt) {
 	}
 }
 
-void SceneBase::draw(sf::RenderWindow& win) {
+void SceneBase::draw(Window& win) {
 	this->onDraw(win);
 
 	for (auto& childScene : m_childScenes) {

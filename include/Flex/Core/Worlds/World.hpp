@@ -24,19 +24,25 @@ namespace Flex {
 			using TransformBuffer			= std::array<std::unique_ptr<sf::Transformable>, BUFFER>;
 			using TransformArray 			= std::vector<std::unique_ptr<sf::Transformable>>;
 		
-			constexpr World() = default;
-			explicit constexpr World(const SharedContext& context) :
+			World() = default;
+			World(const SharedContext& context) :
 				m_context(context) { }
-			virtual ~World();
+			virtual ~World() = default;
 
 			template <EventType ET>
 			void handleEvent(const ET& event) {
 				m_sceneManager.handleEvent(event);
 			}
 
-			void update(double dt);
-			void postUpdate(double dt);
-			void draw(const sf::WindowBase& win);
+			void update(double dt) {
+				m_sceneManager.update(dt);
+			}
+			void postUpdate(double dt) {
+				m_sceneManager.postUpdate(dt);
+			}
+			void draw(Window& win) {
+				m_sceneManager.draw(win);
+			}
 
 		protexted:
 			SceneManager				m_sceneManager;

@@ -8,6 +8,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "Flex/Events/EventManager.hpp"
+#include "Flex/Window/Window.hpp"
 
 namespace Flex {
 
@@ -23,7 +24,7 @@ namespace Flex {
 			virtual void onDeactivate();
 			virtual void onUpdate(double dt);
 			virtual void onPostUpdate(double dt);
-			virtual void onDraw(sf::RenderWindow& win);
+			virtual void onDraw(Window& win);
 
 			void create();
 			void destroy();
@@ -32,7 +33,7 @@ namespace Flex {
 
 			void update(double dt);
 			void postUpdate(double dt);
-			void draw(sf::RenderWindow& win);
+			void draw(Window& win);
 
 			template <EventType ET>
 			void handleEvent(const ET& event) {
