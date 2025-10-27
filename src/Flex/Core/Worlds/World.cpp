@@ -13,8 +13,7 @@ World::~World() = default;
 EntityID World::newEntity() {
 	ID_t newID;
 	if (!m_unusedIDs.empty()) {
-		newID = m_unusedIDs.front();
-		m_unusedIDs.pop();
+		newID = m_unusedIDs.extract(m_unusedIDs.cbegin()).value();
 	}
 	else {
 		newID = m_ecCount;
@@ -25,6 +24,27 @@ EntityID World::newEntity() {
 
 	++m_ecCount;
 	return newID;
+}
+
+bool World::removeEntity(EntityID id) {
+	if (id >= BUFFER + m_ec.size() || m_unusedIDs.contains(id))
+		return false;
+	
+	ComponentList& clist = id < BUFFER ? m_ecBuffer.at(id) : m_ec.at(id - BUFFER);
+	
+	for (auto& ctype : clist) {
+		try {
+			m_componentMap.at(ctype)->remove(id);
+		}
+		catch (const std::exception&) {
+			continue;
+		}
+	}
+
+	clist.clear();
+	m_unusedIDs.insert(id);
+
+	return true;
 }
 
 void World::update(double dt) {
