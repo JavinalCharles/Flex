@@ -1,6 +1,9 @@
 #pragma once
 
 #include <array>
+#include <memory>
+#include <stdexcept>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -15,36 +18,72 @@
 #include "Flex/Utilities/Utility.hpp"
 
 namespace Flex {
-	template <std::size_t BUFFER = 2048>
+
+	#ifdef WORLD_ARRAY_BUFFER
+		#if WORLD_ARRAY_BUFFER > 0
+			constexpr std::size_t BUFFER = min(WORLD_ARRAY_BUFFER, 8192);
+		#else
+			constexpr std::size_t BUFFER = 2048;
+		#endif
+	#else
+		constexpr std::size_t BUFFER = 2048;
+	#endif
+
 	class World {
 		public:
-			using ComponentList 			= std::unordered_set<std::type_index>;
-			using EntityComponentBuffer 	= std::array<ComponentList, BUFFER>;
-			using EntityComponentArray 		= std::vector<ComponentList>;
-			using TransformBuffer			= std::array<std::unique_ptr<sf::Transformable>, BUFFER>;
-			using TransformArray 			= std::vector<std::unique_ptr<sf::Transformable>>;
+			using ComponentList 		= std::unordered_set<std::type_index>;
+			using EntityComponentBuffer = std::array<ComponentList, BUFFER>;
+			using EntityComponentArray 	= std::vector<ComponentList>;
+			using ComponentMap 			= std::unordered_map<std::type_index, std::unique_ptr<ComponentPoolInterface>>;
 		
-			World() = default;
-			World(const SharedContext& context) :
-				m_context(context) { }
-			virtual ~World() = default;
+			World();
+			World(const SharedContext& context);
+			virtual ~World();
+
+			EntityID newEntity();
+			
+			template <ComponentType CT, typename... Args>
+			CT& assignComponent(EntityID id, Args&&... args) {
+				std::type_index tindex(typeid(CT));
+
+				auto [it, inserted] = m_componentMap.try_emplace(tindex, std::make_unique<ComponentPool<CT>>());
+
+				ComponentPool<CT>& cp = static_cast<ComponentPool<CT>&>(*it->second);
+				CT& data = cp.emplace(id, std::forward<Args>(args)...);
+
+				return data;
+			}
+
+			template <ComponentType CT>
+			ComponentPool<CT>& getPool() {
+				std::type_index tindex(typeid(CT));
+				
+				// If it does not exist, create one anyway.
+				auto [it, inserted] = m_componentMap.try_emplace(tindex, std::make_unique<ComponentPool<CT>>());
+
+				return *it->second;
+			}
+
+			template <ComponentType CT>
+			CT& getComponent(EntityID id) {
+				std::type_index tindex(typeid(CT));
+
+				auto it = m_componentMap.find(id);
+				if (it == m_componentMap.end())
+					throw std::out_of_range("World does not have the specified component pool.");
+
+				return it->second.get(id);
+			}
 
 			template <EventType ET>
 			void handleEvent(const ET& event) {
 				m_sceneManager.handleEvent(event);
 			}
 
-			void update(double dt) {
-				m_sceneManager.update(dt);
-			}
-			void postUpdate(double dt) {
-				m_sceneManager.postUpdate(dt);
-			}
-			void draw(Window& win) {
-				m_sceneManager.draw(win);
-			}
-
-		protexted:
+			void update(double dt);
+			void postUpdate(double dt);
+			void draw(Window& win);
+		protected:
 			SceneManager				m_sceneManager;
 			SharedContext				m_context;
 
@@ -54,7 +93,6 @@ namespace Flex {
 			EntityComponentArray		m_ec;
 			std::size_t					m_ecCount = 0;
 
-			TransformBuffer				m_tBuffer{};
-			TransformArray				m_tArray;
+			ComponentMap 				m_componentMap;
 	}; // class World
 } // namespace Flex

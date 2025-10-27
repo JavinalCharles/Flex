@@ -20,7 +20,7 @@ namespace Flex {
 			virtual ~ComponentPool() = default;
 
 			template <typename ...Args>
-			T& emplace(EntityID id, Args&&... args) {
+			CT& emplace(EntityID id, Args&&... args) {
 				auto it = m_entityToIndex.find(id);
 				if (it != m_entityToIndex.end()) {
 					return m_data.at(it->second);
@@ -52,10 +52,11 @@ namespace Flex {
 				m_entityToIndex.erase(it);
 			}
 
-			CT* get(EntityID id) {
+			CT& get(EntityID id) {
 				auto it = m_entityToIndex.find(id);
-				if (it == m_entityToIndex.end()) return nullptr;
-				return &m_data.at(it->second);
+				if (it == m_entityToIndex.end())
+					throw std::out_of_range("Entity does not have the desired component.");
+				return m_data.at(it->second);
 			}
 		private:
 			std::vector<CT>								m_data;

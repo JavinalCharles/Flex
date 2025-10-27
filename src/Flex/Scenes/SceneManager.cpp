@@ -1,51 +1,67 @@
 #include "Flex/Scenes/SceneManager.hpp"
+#include "Flex/Core/Worlds/World.hpp"
 
 using Flex::SceneBase;
 using Flex::SceneManager;
+using Flex::World;
 
-SceneManager::SceneManager() = default;
-SceneManager::~SceneManager() = default;
+namespace Flex {
 
-bool SceneManager::removeScene(ID_t sceneID) {
-	if (sceneID >= m_scenes.size()) return false;
 
-	try {
-		std::shared_ptr<SceneBase>& ptr = m_scenes.at(sceneID);
-		ptr.reset();
+	SceneManager::SceneManager(World* containingWorld) :
+		m_containingWorld(containingWorld)
+	{
+
 	}
-	catch (const std::exception&) {
-		return false;
+	SceneManager::~SceneManager() = default;
+
+	bool SceneManager::removeScene(ID_t sceneID) {
+		if (sceneID >= m_scenes.size()) return false;
+
+		try {
+			std::shared_ptr<SceneBase>& ptr = m_scenes.at(sceneID);
+			ptr.reset();
+		}
+		catch (const std::exception&) {
+			return false;
+		}
+
+		m_unusedSceneID.push(sceneID);
+
+		return true;
 	}
 
-	m_unusedSceneID.push(sceneID);
+	void SceneManager::update(double dt) {
+		if (m_activeScene.first.has_value() && m_activeScene.second != nullptr)
+			m_activeScene.second->update(dt);
+	}
 
-	return true;
-}
+	void SceneManager::postUpdate(double dt) {
+		if (m_activeScene.first.has_value() && m_activeScene.second != nullptr)
+			m_activeScene.second->postUpdate(dt);
+	}
 
-void SceneManager::update(double dt) {
-	if (m_activeSceneID >= m_scenes.size()) return;
-	std::shared_ptr<SceneBase>& scenePtr = m_scenes.at(m_activeSceneID);
-	if (scenePtr == nullptr) return;
+	void SceneManager::draw(Window& win) {
+		if (m_activeScene.first.has_value() && m_activeScene.second != nullptr)
+			m_activeScene.second->draw(win);
+	}
 
-	scenePtr->update(dt);
-}
+	bool SceneManager::setActiveScene(ID_t sceneID) {
+		if (sceneID >= m_scenes.size() ||
+			m_activeScene.first.value_or(sceneID) == sceneID || 
+			m_scenes.at(sceneID) == nullptr)
+			return false;
 
-void SceneManager::postUpdate(double dt) {
-	if (m_activeSceneID >= m_scenes.size()) return;
-	std::shared_ptr<SceneBase>& scenePtr = m_scenes.at(m_activeSceneID);
-	if (scenePtr == nullptr) return;
+		auto& [optID, scenePtr] = m_activeScene;
+		scenePtr->deactivate();
 
-	scenePtr->postUpdate(dt);
-}
+		optID.reset();
+		scenePtr.reset();
 
-void SceneManager::draw(Window& win) {
-	if (m_activeSceneID >= m_scenes.size()) return;
-	std::shared_ptr<SceneBase>& scenePtr = m_scenes.at(m_activeSceneID);
-	if (scenePtr == nullptr) return;
+		optID = sceneID;
+		scenePtr = m_scenes.at(sceneID);
+		scenePtr->activate();
 
-	scenePtr->draw(win);
-}
-
-bool SceneManager::setActiveScene(ID_t sceneID) {
-	
-}
+		return true;
+	}
+} // namespace Flex

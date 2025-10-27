@@ -2,16 +2,25 @@
 
 #include <concepts>
 
+#include "Flex/Core/Entities/Entity.hpp"
 #include "Flex/Utilities/Utility.hpp"
 
 namespace Flex {
 
-class Component {
-public:
-	
-}; // class Component
+	class Component {
+		public:
+			const EntityID ownerID;
+			constexpr Component(EntityID id) :
+				ownerID(id)
+			{
 
-template <typename C>
-concept ComponentType = std::derived_from<C, Component>;
+			}
+
+			virtual ~Component();
+		
+	}; // class Component
+
+	template <typename C>
+	concept ComponentType = std::derived_from<C, Component>;
 
 } // namespace Flex
