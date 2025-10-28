@@ -1,6 +1,9 @@
 #pragma once
 
+#include <functional>
+#include <optional>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "Flex/Core/Components/Component.hpp"
@@ -16,6 +19,7 @@ namespace Flex {
 	template <ComponentType CT>
 	class ComponentPool : public ComponentPoolInterface {
 		public:
+			using ComponentRef = std::optional<std::reference_wrapper<CT>>;
 			ComponentPool() : ComponentPoolInterface() {}
 			virtual ~ComponentPool() = default;
 
@@ -33,7 +37,7 @@ namespace Flex {
 				return m_data.back();
 			}
 
-			void remove(EntityID) override {
+			void remove(EntityID id) override {
 				auto it = m_entityToIndex.find(id);
 				if (it == m_entityToIndex.end()) return;
 
@@ -52,11 +56,11 @@ namespace Flex {
 				m_entityToIndex.erase(it);
 			}
 
-			CT& get(EntityID id) {
+			ComponentRef get(EntityID id) {
 				auto it = m_entityToIndex.find(id);
 				if (it == m_entityToIndex.end())
-					throw std::out_of_range("Entity does not have the desired component.");
-				return m_data.at(it->second);
+					return std::nullopt;
+				return std::make_optional(std::ref(m_data.at(it->second)));
 			}
 		private:
 			std::vector<CT>								m_data;

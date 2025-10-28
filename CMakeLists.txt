@@ -7,6 +7,8 @@ project(
 	LANGUAGES CXX
 )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 option(DEBUG "Enables DEBUG_MODE_ON Macro." ON)
 option(DEBUG_VERBOSE "Enables DEBUG_VERBOSE_ENABLED" OFF)
 option(BUILD_EXAMPLES "Instructs cmake to build the example programs as well, after building the library" OFF)

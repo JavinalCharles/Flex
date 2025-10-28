@@ -1,9 +1,7 @@
 #pragma once
 
-#include <concepts>
 #include <functional>
 #include <typeindex>
-#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
@@ -24,7 +22,7 @@ namespace Flex {
 				std::type_index eventID(typeid(ET));
 				auto wrapper = [handler = std::move(handler)](const EventBase& e) {
 					handler(static_cast<const ET&>(e));
-				}
+				};
 				m_subscribers[eventID].push_back(std::move(wrapper));
 			}
 
@@ -35,7 +33,7 @@ namespace Flex {
 				if (it == m_subscribers.end()) return;
 
 				ET event;
-				for (auto& fn : it->second)
+				for (const auto& fn : it->second)
 					fn(event);
 			}
 
@@ -45,7 +43,7 @@ namespace Flex {
 				auto it = m_subscribers.find(eventID);
 				if (it == m_subscribers.end()) return;
 
-				for (auto& fn : it->second)
+				for (const auto& fn : it->second)
 					fn(event);
 			}
 

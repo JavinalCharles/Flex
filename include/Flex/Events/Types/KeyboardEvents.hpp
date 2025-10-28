@@ -1,7 +1,7 @@
 #pragma once
 
-#include <type_traits>
 #include "Flex/Events/Types/Event.hpp"
+#include "Flex/Utilities//Utility.hpp"
 
 namespace Flex {
 	enum KeyEventMod {

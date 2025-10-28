@@ -57,3 +57,6 @@ node_modules/
 # Keep LICENSE and README
 !LICENSE
 !README.md
+
+.clangd
+.clang-tidy

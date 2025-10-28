@@ -17,9 +17,7 @@ EntityID World::newEntity() {
 	}
 	else {
 		newID = m_ecCount;
-		if (newID >= BUFFER) {
-			m_ec.emplace_back();
-		}
+		m_ec.emplace_back();
 	}
 
 	++m_ecCount;
@@ -27,12 +25,12 @@ EntityID World::newEntity() {
 }
 
 bool World::removeEntity(EntityID id) {
-	if (id >= BUFFER + m_ec.size() || m_unusedIDs.contains(id))
+	if (id >= m_ec.size() || m_unusedIDs.contains(id))
 		return false;
 	
-	ComponentList& clist = id < BUFFER ? m_ecBuffer.at(id) : m_ec.at(id - BUFFER);
+	ComponentSet& cset = m_ec.at(id);
 	
-	for (auto& ctype : clist) {
+	for (auto& ctype : cset) {
 		try {
 			m_componentMap.at(ctype)->remove(id);
 		}
@@ -41,7 +39,7 @@ bool World::removeEntity(EntityID id) {
 		}
 	}
 
-	clist.clear();
+	cset.clear();
 	m_unusedIDs.insert(id);
 
 	return true;

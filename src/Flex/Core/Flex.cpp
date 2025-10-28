@@ -1,5 +1,13 @@
 #include "Flex/Core/Flex.hpp"
+#include "SFML/Window/Event.hpp"
+#include <chrono>
 #include <iostream>
+#include <optional>
+#include <system_error>
+#include <thread>
+
+#include "Flex/Events/Types/KeyboardEvents.hpp"
+#include "Flex/Events/Types/MouseEvents.hpp"
 
 namespace fs = std::filesystem;
 
@@ -88,16 +96,26 @@ void Flex::run() {
 }
 
 void Flex::handleEvents() {
-	std::optional<sf::Event> event;
-	while (event = m_window.getRenderWindow().pollEvent()) {
-		if (event->is<sf::Event::Closed>()) {
+	m_window.getRenderWindow().handleEvents(
+		[&](const sf::Event::Closed&) {
 			m_window.close();
-			break;
+		},
+		[&](const sf::Event::KeyPressed& e) {
+			m_world.handleEvent(KeyPressedEvent(e));
+		},
+		[&](const sf::Event::KeyReleased& e) {
+			m_world.handleEvent(KeyReleasedEvent(e));
+		},
+		[&](const sf::Event::MouseButtonPressed& e) {
+			m_world.handleEvent(MouseButtonPressedEvent(e));
+		},
+		[&](const sf::Event::MouseButtonReleased& e) {
+			m_world.handleEvent(MouseButtonReleasedEvent(e));
+		},
+		[&](const sf::Event::MouseWheelScrolled& e) {
+			m_world.handleEvent(MouseWheelScrolledEvent(e));
 		}
-		else {
-			m_sceneManager.handleEvents(event.value());
-		}
-	}
+	);
 }
 
 void Flex::update(double dt) {

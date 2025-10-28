@@ -1,8 +1,6 @@
 #pragma once
-#include <string>
 
 #include <SFML/Window/Event.hpp>
-#include "Flex/Utilities/Utility.hpp"
 
 namespace Flex {
 	struct EventBase {

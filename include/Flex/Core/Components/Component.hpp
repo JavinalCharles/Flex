@@ -3,7 +3,6 @@
 #include <concepts>
 
 #include "Flex/Core/Entities/Entity.hpp"
-#include "Flex/Utilities/Utility.hpp"
 
 namespace Flex {
 

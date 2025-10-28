@@ -7,7 +7,6 @@
 
 #include "Flex/Core/Components/Component.hpp"
 #include "Flex/Core/Entities/Entity.hpp"
-#include "Flex/Utilities/Utility.hpp"
 
 namespace Flex {
 

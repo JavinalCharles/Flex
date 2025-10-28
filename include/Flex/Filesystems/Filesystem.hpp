@@ -1,9 +1,7 @@
 #pragma once
 
-#include <iostream>
 #include <string>
-#include <filesystem>
-#include <cstdlib> // for getenv
+
 #ifdef _WIN32
 #include <windows.h>
 #elif __APPLE__

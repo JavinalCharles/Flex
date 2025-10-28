@@ -1,9 +1,9 @@
 #pragma once
 
-#include <type_traits>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "Flex/Events/Types/Event.hpp"
+#include "Flex/Utilities//Utility.hpp"
 
 namespace Flex {
 	struct MouseButtonPressedEvent : public Event<MouseButtonPressedEvent> {
@@ -18,7 +18,7 @@ namespace Flex {
 		constexpr MouseButtonPressedEvent(ID_t button, int x, int y) : 
 			Event<MouseButtonPressedEvent>(), button(button), position(x, y)
 		{ }
-		constexpr MouseButtonPressedEvent(const sf::Event::MouseButtonPressed& sfe) : 
+		constexpr explicit MouseButtonPressedEvent(const sf::Event::MouseButtonPressed& sfe) : 
 			Event<MouseButtonPressedEvent>(),
 			button(static_cast<ID_t>(sfe.button)),
 			position(sfe.position)

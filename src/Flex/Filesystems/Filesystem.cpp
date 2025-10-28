@@ -1,12 +1,13 @@
-#include "Flex/Filesystem/Filesystem.hpp"
-
+#include "Flex/Filesystems/Filesystem.hpp"
+#include <cstdlib>
+#include <filesystem>
 
 std::string Flex::getBasePath() {
     std::filesystem::path exePath;
 
 #ifdef _WIN32
     char buffer[MAX_PATH];
-    DWORD size = GetModuleFileNameA(nullptr, buffer, MAX_PATH);
+    [[maybe_unused]] DWORD size = GetModuleFileNameA(nullptr, buffer, MAX_PATH);
     exePath = std::filesystem::path(buffer).remove_filename();
 #elif __APPLE__
     uint32_t size = 0;

@@ -1,13 +1,9 @@
 #pragma once
 
-#include <chrono>
 #include <filesystem>
-#include <optional>
 #include <string>
-#include <system_error>
-#include <variant>
-#include <thread>
-#include <unordered_map>
+// #include <unordered_map>
+// #include <variant>
 
 #include <tinyxml2/tinyxml2.h>
 #include <Flex/Filesystems/PathFinder.hpp>
@@ -15,6 +11,7 @@
 
 #include <SFML/Window/Event.hpp>
 
+#include "Flex/Core/Worlds//World.hpp"
 #include "Flex/Utilities/Utility.hpp"
 #include "Flex/Window/Window.hpp"
 
@@ -72,6 +69,9 @@ private: // HELPERS
 	void cleanUp();
 private:
 	bool m_isRunning = false;
+
+	World m_world;
+	// std::unordered_map<std::string, std::variant>
 
 	Window m_window;
 	SceneManager m_sceneManager;

@@ -2,12 +2,9 @@
 #include "Flex/Core/Worlds/World.hpp"
 
 using Flex::SceneBase;
-using Flex::SceneManager;
 using Flex::World;
 
 namespace Flex {
-
-
 	SceneManager::SceneManager(World* containingWorld) :
 		m_containingWorld(containingWorld)
 	{

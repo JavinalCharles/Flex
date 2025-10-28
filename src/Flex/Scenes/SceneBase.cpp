@@ -1,5 +1,5 @@
 #include "Flex/Scenes/SceneBase.hpp"
-#include "Flex/Scenes/SceneManager.hpp"
+#include "Flex/Scenes/SceneManager.hpp" // IWYU pragma: keep
 
 using Flex::SceneBase;
 

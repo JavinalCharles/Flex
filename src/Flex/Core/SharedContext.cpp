@@ -1,7 +1,8 @@
 #include "Flex/Core/SharedContext.hpp"
-#include "Flex/Events/EventManager.hpp"
-#include "Flex/Scenes/SceneManager.hpp"
-#include "Flex/Window/Window.hpp"
+#include "Flex/Events/EventManager.hpp" // IWYU pragma: keep
+#include "Flex/Scenes/SceneManager.hpp" // IWYU pragma: keep
+#include "Flex/Window/Window.hpp" // IWYU pragma: keep
+
 
 using namespace Flex;
 
