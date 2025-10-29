@@ -22,8 +22,6 @@ namespace Flex {
 
 	class World {
 		public:
-			
-		
 			World();
 			explicit World(const SharedContext& context);
 			virtual ~World();
