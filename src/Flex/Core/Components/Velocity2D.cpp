@@ -20,3 +20,8 @@ void Velocity2D::clampVelocity() {
 		m_velocity *= m_maxSpeed / m_velocity.length();
 	}
 }
+
+void Velocity2D::reset() {
+	m_velocity.x = 0;
+	m_velocity.y = 0;
+}

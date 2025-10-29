@@ -30,7 +30,7 @@ namespace Flex {
 					return m_data.at(it->second);
 				}
 				std::size_t index = m_data.size();
-				m_data.emplace_back(std::forward<Args>(args)...);
+				m_data.emplace_back(id, std::forward<Args>(args)...);
 				m_entityToIndex[id] = index;
 				m_indexToEntity.push_back(id);
 
@@ -61,6 +61,10 @@ namespace Flex {
 				if (it == m_entityToIndex.end())
 					return std::nullopt;
 				return std::make_optional(std::ref(m_data.at(it->second)));
+			}
+
+			inline std::vector<CT>& data() {
+				return m_data;
 			}
 		private:
 			std::vector<CT>								m_data;

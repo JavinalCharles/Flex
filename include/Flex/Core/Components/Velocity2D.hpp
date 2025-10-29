@@ -20,6 +20,7 @@ namespace Flex {
 			constexpr const sf::Vector2f& getVelocity() const {
 				return m_velocity;
 			}
+			void reset();
 		private:
 			void clampVelocity();
 		private:
