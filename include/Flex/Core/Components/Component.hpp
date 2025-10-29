@@ -9,7 +9,7 @@ namespace Flex {
 	class Component {
 		public:
 			const EntityID ownerID;
-			constexpr Component(EntityID id) :
+			explicit constexpr Component(EntityID id) :
 				ownerID(id)
 			{
 
