@@ -8,15 +8,20 @@ using namespace Flex;
 Movement2DSystem::~Movement2DSystem() = default;
 
 void Movement2DSystem::update(double dt) {
-	ComponentPool<Transform>& transformPool =  getWorld()->getPool<Transform>();
-	ComponentPool<Velocity2D>& velocityPool = getWorld()->getPool<Velocity2D>();
+	if (m_world == nullptr)
+		return;
+	ComponentPool<Transform>& transformPool =  m_world->getPool<Transform>();
+	ComponentPool<Velocity2D>& velocityPool = m_world->getPool<Velocity2D>();
+
+	if (transformPool.empty() || velocityPool.empty())
+		return;
 
 	for (Velocity2D& vel : velocityPool.data()) {
 		const EntityID ID = vel.ownerID;
 		if (auto ref = transformPool.get(ID);  ref.has_value()) {
 			// Transform& transform = ref.value();
 			// transform.move(vel.getVelocity());
-			ref.value().get().move(vel.getVelocity()); // shortcut of aboce
+			ref.value().get().move(vel.getVelocity()); // shortcut of above
 		}
 		vel.reset();
 	}

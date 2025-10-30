@@ -28,18 +28,16 @@ bool World::removeEntity(EntityID id) {
 	if (id >= m_ec.size() || m_unusedIDs.contains(id))
 		return false;
 	
-	ComponentSet& cset = m_ec.at(id);
-	
-	for (auto& ctype : cset) {
+	for (auto& ctype : m_ec.at(id)) {
 		try {
-			m_componentMap.at(ctype)->remove(id);
+			m_poolMap.at(ctype)->remove(id);
 		}
 		catch (const std::exception&) {
 			continue;
 		}
 	}
 
-	cset.clear();
+	m_ec.at(id).clear();
 	m_unusedIDs.insert(id);
 
 	return true;

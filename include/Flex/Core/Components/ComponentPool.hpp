@@ -23,18 +23,33 @@ namespace Flex {
 			ComponentPool() : ComponentPoolInterface() {}
 			virtual ~ComponentPool() = default;
 
-			template <typename ...Args>
-			CT& emplace(EntityID id, Args&&... args) {
-				auto it = m_entityToIndex.find(id);
-				if (it != m_entityToIndex.end()) {
-					return m_data.at(it->second);
-				}
-				std::size_t index = m_data.size();
-				m_data.emplace_back(id, std::forward<Args>(args)...);
-				m_entityToIndex[id] = index;
-				m_indexToEntity.push_back(id);
+			constexpr bool empty() const {
+				return m_data.empty();
+			}
 
-				return m_data.back();
+			template <typename ...Args>
+			[[nodiscard]] ComponentRef assign(EntityID ID, Args&&... args) {
+				auto it = m_entityToIndex.find(ID);
+				if (it != m_entityToIndex.end()) {
+					try {
+						const std::size_t INDEX = it->second;
+						m_data.at(INDEX) = CT(ID, std::forward<Args>(args)...);
+						return std::make_optional(std::ref(m_data.at(INDEX)));
+					}
+					catch (const std::exception&) {
+						return std::nullopt;
+					}
+				}
+				std::size_t INDEX = m_data.size();
+				try {
+					m_data.emplace_back(ID, std::forward<Args>(args)...);
+					m_entityToIndex[ID] = INDEX;
+					m_indexToEntity.push_back(ID);
+					return std::make_optional(std::ref(m_data.back()));
+				}
+				catch (const std::exception&) {
+					return std::nullopt;
+				}
 			}
 
 			void remove(EntityID id) override {
