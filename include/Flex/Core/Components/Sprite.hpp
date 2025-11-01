@@ -7,7 +7,7 @@
 #include "Flex/Utilities/Utility.hpp"
 
 namespace Flex {
-	class Sprite : public Drawable, public sf::Sprite {
+	class Sprite : public Drawable {
 		public:
 			Sprite(EntityID ID, const sf::Texture& texture);
 			Sprite(EntityID ID, const sf::Texture& texture, const sf::IntRect& rect);
@@ -15,7 +15,10 @@ namespace Flex {
 			Sprite(EntityID ID, const sf::Texture& texture, ID16_t DRAW_LAYER, ID16_t SORT_ORDER = 0u);
 			virtual ~Sprite();
 
-			virtual void drawOnTarget(Window& window) override;
+			virtual void draw(sf::RenderTarget& target, sf::RenderStates state) const override;
+			constexpr sf::Sprite& getSprite() { return m_sprite; }
+			constexpr const sf::Sprite& getSprite() const { return m_sprite; }
 		private:
+			sf::Sprite m_sprite;
 	}; // class Sprite
 } // namespace Flex
