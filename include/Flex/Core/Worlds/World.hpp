@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <optional>
 #include <unordered_map>
 #include <unordered_set>
@@ -11,6 +12,7 @@
 #include "Flex/Core/Entities/Entity.hpp"
 #include "Flex/Core/SharedContext.hpp"
 #include "Flex/Events/Types/Event.hpp"
+#include "Flex/Resources/ResourceManager.hpp"
 #include "Flex/Scenes/SceneManager.hpp"
 
 namespace Flex {
@@ -19,6 +21,7 @@ namespace Flex {
 	using PoolMap 				= std::unordered_map<std::type_index, std::unique_ptr<ComponentPoolInterface>>;
 	template <ComponentType CT>
 	using ComponentRef		 	= std::optional<std::reference_wrapper<CT>>;
+	using ResourcesManagerMap	= std::unordered_map<std::type_index, std::unique_ptr<IRM>>;
 
 	class World {
 		public:
@@ -83,6 +86,9 @@ namespace Flex {
 			template <ComponentType CT>
 			ComponentRef<CT> getComponent(EntityID ID);
 
+			template<typename R>
+			ResourceManager<R>& getManager();
+
 			/// 
 			/// @brief Handle the given event
 			/// 
@@ -122,6 +128,7 @@ namespace Flex {
 			std::size_t						m_ecCount = 0u;
 
 			PoolMap 						m_poolMap;
+			ResourcesManagerMap				m_managerMap;
 	}; // class World
 
 	/////////////////////////////////////////////////////////////////////// 
@@ -153,6 +160,20 @@ namespace Flex {
 
 		ComponentPool<CT>& pool = getPool<CT>();
 		return pool.get(id);
+	}
+
+	template<typename R>
+	ResourceManager<R>& World::getManager() {
+		const std::type_index TID(typeid(R));
+		auto it = m_managerMap.find(TID);
+
+		if (it == m_managerMap.end()) {
+			auto ptr = std::make_unique<ResourceManager<R>>();
+			auto [newIt, _] = m_managerMap.emplace(TID, std::move(ptr));
+			it = newIt;
+		}
+
+		return *static_cast<ResourceManager<R>*>(it->second.get());
 	}
 
 	template <EventType ET>
