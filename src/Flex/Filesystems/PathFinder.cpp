@@ -5,7 +5,7 @@ using namespace Flex;
 namespace fs = std::filesystem;
 
 namespace {
-	constexpr std::string_view HAS_FILENAME = "The provided prefix path has a file name: ";
+	[[maybe_unused]] constexpr std::string_view HAS_FILENAME = "The provided prefix path has a file name: ";
 }
 
 std::vector<fs::path> PathFinder::s_commonDirs;

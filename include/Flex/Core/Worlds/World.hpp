@@ -151,7 +151,7 @@ namespace Flex {
 		// If it does not exist, create a pool anyway.
 		auto [it, inserted] = m_poolMap.try_emplace(TYPE_INDEX, std::make_unique<ComponentPool<CT>>());
 
-		return *it->second;
+		return *static_cast<ComponentPool<CT>*>(it->second.get());
 	}
 
 	template <ComponentType CT>
@@ -165,13 +165,9 @@ namespace Flex {
 	template<typename R>
 	ResourceManager<R>& World::getManager() {
 		const std::type_index TID(typeid(R));
-		auto it = m_managerMap.find(TID);
+		// auto it = m_managerMap.find(TID);
 
-		if (it == m_managerMap.end()) {
-			auto ptr = std::make_unique<ResourceManager<R>>();
-			auto [newIt, _] = m_managerMap.emplace(TID, std::move(ptr));
-			it = newIt;
-		}
+		auto [it, inserted] = m_managerMap.try_emplace(TID, std::make_unique<ResourceManager<R>>());
 
 		return *static_cast<ResourceManager<R>*>(it->second.get());
 	}

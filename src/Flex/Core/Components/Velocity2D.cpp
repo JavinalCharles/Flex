@@ -5,7 +5,7 @@ using Flex::Velocity2D;
 
 Velocity2D::~Velocity2D() { }
 
-void Velocity2D::setMove(const sf::Vector2f& vel) {
+void Velocity2D::set(const sf::Vector2f& vel) {
 	m_velocity = vel;
 
 	clampVelocity();

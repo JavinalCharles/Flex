@@ -19,9 +19,7 @@ void Movement2DSystem::update(double dt) {
 	for (Velocity2D& vel : velocityPool.data()) {
 		const EntityID ID = vel.ownerID;
 		if (auto ref = transformPool.get(ID);  ref.has_value()) {
-			// Transform& transform = ref.value();
-			// transform.move(vel.getVelocity());
-			ref.value().get().move(vel.getVelocity()); // shortcut of above
+			ref.value().get().move(vel.get());
 		}
 		vel.reset();
 	}

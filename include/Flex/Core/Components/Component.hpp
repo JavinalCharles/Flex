@@ -17,7 +17,7 @@ namespace Flex {
 			/// @brief the ID of the Entity owning this component instance.
 			///
 			///
-			const EntityID ownerID;
+			EntityID ownerID;
 
 			///
 			/// @brief Contstructs a Component object
@@ -25,6 +25,16 @@ namespace Flex {
 			///
 			explicit constexpr Component(EntityID id) :
 				ownerID(id) { }
+			
+			constexpr Component(const Component& other) :
+				ownerID(other.ownerID) { }
+
+			constexpr Component& operator=(const Component& rhs) {
+				if (&rhs != this) {
+					this->ownerID = rhs.ownerID;
+				}
+				return *this;
+			}
 
 			/// 
 			/// @brief Destroy the Component object

@@ -37,7 +37,7 @@ namespace Flex {
 
 			template <EventType ET>
 			void handleEvent(const ET& event) {
-				m_eventManager.post(ET);
+				m_eventManager.post(event);
 			}
 		protected:
 			EventManager							m_eventManager;

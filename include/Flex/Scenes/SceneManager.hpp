@@ -30,23 +30,23 @@ namespace Flex {
 				if (m_unusedSceneID.empty()) {
 					ID_t index = static_cast<ID_t>(m_scenes.size());
 					try {
-						m_scenes.push_back(std::make_shared<ET>(std::forward<Args>(args)...));
+						m_scenes.push_back(std::make_shared<ST>(std::forward<Args>(args)...));
 						data.first.emplace(index);
 						data.second = m_scenes.back();
 					}
 					catch (const std::exception&) {
-						return SceneData; // return empty data
+						return data; // return empty data
 					}
 				}
 				else {
 					ID_t index = m_unusedSceneID.front();
 					try {
-						m_scenes.at(index) = std::make_shared<ET>(std::forward<Args>(args)...);
+						m_scenes.at(index) = std::make_shared<ST>(std::forward<Args>(args)...);
 						data.first.emplace(index);
 						data.second = m_scenes.at(index);
 					}
 					catch (const std::exception&) {
-						return SceneData; // return empty data
+						return data; // return empty data
 					}
 					m_unusedSceneID.pop();
 				}
@@ -59,7 +59,7 @@ namespace Flex {
 			void handleEvent(const ET& event) {
 				if (!m_activeScene.first.has_value() || m_activeScene.second == nullptr)
 					return;
-				m_activeScene.second->handleEvent(ET);
+				m_activeScene.second->handleEvent(event);
 			}
 
 			void update(double dt);

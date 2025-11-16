@@ -11,7 +11,8 @@
 
 namespace Flex {
 	class IRM {
-		virtual ~IRM();
+		public:
+			virtual ~IRM();
 	}; // class IRM
 
 	template <typename R>
