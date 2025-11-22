@@ -26,6 +26,10 @@ Flex::~Flex() {
 	cleanUp();
 }
 
+void Flex::setDefaultConfigFunction(std::function<void(configMap&)> callable) {
+	m_defaultConfigFunction = callable;
+}
+
 void Flex::init() {
 	resetConfigDefaults();
 }
@@ -135,15 +139,9 @@ void Flex::draw() {
 
 
 void Flex::resetConfigDefaults() {
-	std::string temp = m_config.contains("title") ? std::get<std::string>(m_config["title"]) : "Flex App";
-	m_config.clear();
-	m_config["title"] = temp;
-	m_config["width"] = 800;
-	m_config["height"] = 600;
-	m_config["fullscreen"] = 0;
-	m_config["antialiasing_level"] = 0;
-	m_config["vsync"] = 1;
-	m_config["framerate_limit"] = 60;
+	if (m_defaultConfigFunction != nullptr) {
+		m_defaultConfigFunction(m_config);
+	}
 }
 
 void Flex::readAndMapConfigs(const fs::path& configPath) {

@@ -4,7 +4,8 @@
 #include <SFML/Window/Window.hpp>
 #include <SFML/System.hpp>
 
-#include <string>
+#include <string> // IWYU pragma: keep.
+#include <variant> // IWYU pragma: keep
 
 #include "Flex/Utilities/Utility.hpp"
 
@@ -13,6 +14,7 @@ namespace Flex {
 class Window {
 public:
     Window();
+
     Window(const Window&) = delete;
     Window(Window&&) = delete;
     Window& operator=(const Window&) = delete;
@@ -31,6 +33,13 @@ public:
 
     sf::RenderWindow& getRenderWindow();
     const sf::RenderWindow& getRenderWindow() const;
+private:
+	template <typename R>
+	R getFromKeyOrDefault(const Flex::configMap& configs, const std::string& KEY, const R& defaultValue) {
+		return configs.contains(KEY) && std::holds_alternative<R>(configs.at(KEY))
+			? std::get<R>(configs.at(KEY)) : defaultValue;
+	}
+
 private:
     sf::RenderWindow m_window;
 }; // class Window

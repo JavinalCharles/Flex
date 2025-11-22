@@ -6,30 +6,44 @@ Window::Window() = default;
 
 Window::~Window() = default;
 
-void Window::create(const configMap& configs) {
-    std::string title = configs.contains("title") ? std::get<std::string>(configs.at("title")) : "Flex App";
-    unsigned int width = configs.contains("width") ? std::get<int>(configs.at("width")) : 800;
-    unsigned int height = configs.contains("height") ? std::get<int>(configs.at("height")) : 600;
-    bool fullscreen = configs.contains("fullscreen") ? static_cast<bool>(std::get<int>(configs.at("fullscreen"))) : false;
-    bool vsync = configs.contains("vsync") ? static_cast<bool>(std::get<int>(configs.at("vsync"))) : false;
-    unsigned int framerateLimit = configs.contains("framerate_limit") ? std::get<int>(configs.at("framerate_limit")) : 60;
-    unsigned int antialiasingLevel = configs.contains("antialiasing_level") ? std::get<int>(configs.at("antialiasing_level")) : 0;
-    unsigned int majorVersion = configs.contains("major_version") ? std::get<int>(configs.at("major_version")) : 0;
-    unsigned int minorVersion = configs.contains("minor_version") ? std::get<int>(configs.at("minor_version")) : 0;
+namespace {
+	const std::string WIN_TITLE = "window_title";
+	const std::string WIN_WIDTH = "window_width";
+	const std::string WIN_HEIGHT = "window_height";
+	const std::string WIN_FULLSCREEN = "window_fullscreen";
+	const std::string WIN_VSYNC = "window_vsync";
+	const std::string WIN_FPS_LIMIT = "window_framerate_limit";
+	const std::string WIN_ANTIALIASING_LVL = "window_antialiasing_level";
+	const std::string WIN_MAJOR_VERSION = "window_major_version";
+	const std::string WIN_MINOR_VERSION = "window_minor_version";
+}
 
-    sf::VideoMode videoMode(sf::Vector2u(width, height));
-    sf::State state = fullscreen ? sf::State::Fullscreen : sf::State::Windowed;
+void Window::create(const configMap& configs) {
+	const std::string TITLE = getFromKeyOrDefault<std::string>(configs, WIN_TITLE, "FLEX App");
+	const size_t WIDTH = getFromKeyOrDefault<int>(configs, WIN_WIDTH, 800);
+	const size_t HEIGHT = getFromKeyOrDefault<int>(configs, WIN_HEIGHT, 600);
+	const bool FULLSCREEN_ON = getFromKeyOrDefault<int>(configs, WIN_FULLSCREEN, 0);
+	const bool VSYNC_ENABLED = getFromKeyOrDefault<int>(configs, WIN_VSYNC, 0);
+    const size_t FPS_LIMIT = getFromKeyOrDefault(configs, WIN_FPS_LIMIT, 0);
+    const size_t ANTIALIASING_LVL = getFromKeyOrDefault(configs, WIN_ANTIALIASING_LVL, 0);
+    const size_t MAJOR_VERSION = getFromKeyOrDefault(configs, WIN_MAJOR_VERSION, 0);
+    const size_t MINOR_VERSION = getFromKeyOrDefault(configs, WIN_MINOR_VERSION, 1);
+
+    sf::VideoMode videoMode(sf::Vector2u(WIDTH, HEIGHT));
+    sf::State state = FULLSCREEN_ON ? sf::State::Fullscreen : sf::State::Windowed;
 
     std::uint32_t style = sf::Style::Default;
 
     sf::ContextSettings settings;
-    settings.antiAliasingLevel = antialiasingLevel;
-    settings.majorVersion = majorVersion;
-    settings.minorVersion = minorVersion;
+    settings.antiAliasingLevel = ANTIALIASING_LVL;
+    settings.majorVersion = MAJOR_VERSION;
+    settings.minorVersion = MINOR_VERSION;
 
-    m_window.create(videoMode, title, style, state, settings);
-    m_window.setVerticalSyncEnabled(vsync);
-    m_window.setFramerateLimit(framerateLimit);
+    m_window.create(videoMode, TITLE, style, state, settings);
+	if (VSYNC_ENABLED)
+    	m_window.setVerticalSyncEnabled(VSYNC_ENABLED);
+	else if (FPS_LIMIT > 0)
+    	m_window.setFramerateLimit(FPS_LIMIT);
 }
 
 void Window::close() {

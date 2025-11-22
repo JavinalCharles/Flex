@@ -38,6 +38,17 @@ public:
 	/// @brief Destructor
 	virtual ~Flex();
 
+	/// 
+	/// @brief Set the Default Config Function of the app.
+	/// 
+	/// @param callable The function
+	///
+	/// Should be used to initialize each configuration's default values
+	/// when the application is first ran, or when the user elects to
+	/// to "reset settings to default".
+	///
+	void setDefaultConfigFunction(std::function<void(configMap&)> callable);
+
 	/**
 	 * @name Flex::init()
 	 * @brief initializes the Flex object in preparation for the
@@ -76,7 +87,9 @@ private:
 	Window m_window;
 	SceneManager m_sceneManager;
 	PathFinder m_pf;
+
 	configMap m_config;
+	std::function<void(configMap&)> m_defaultConfigFunction;
 
 	tinyxml2::XMLDocument m_xmlDoc;
 }; // class Engine
