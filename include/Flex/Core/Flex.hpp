@@ -6,12 +6,12 @@
 // #include <variant>
 
 #include <tinyxml2/tinyxml2.h>
-#include <Flex/Filesystems/PathFinder.hpp>
-#include <Flex/Scenes/SceneManager.hpp>
 
 #include <SFML/Window/Event.hpp>
 
 #include "Flex/Core/Worlds//World.hpp"
+#include "Flex/Filesystems/PathFinder.hpp"
+#include "Flex/Scenes/SceneManager.hpp"
 #include "Flex/Utilities/Utility.hpp"
 #include "Flex/Window/Window.hpp"
 
@@ -29,9 +29,9 @@ public:
 	/// @{
 	Flex();
 
-	Flex(const flex&) = delete;
+	Flex(const Flex&) = delete;
 	Flex(Flex&&) = delete;
-	Flex& operator=(const flex&) = delete;
+	Flex& operator=(const Flex&) = delete;
 	Flex& operator=(Flex&&) = delete;
 	/// @}
 
@@ -73,8 +73,11 @@ private: // GAME LOOP
 	void postUpdate(double dt);
 	void draw();
 
+	int getFPSLimit() const;
+
 private: // HELPERS
 	void readAndMapConfigs(const fs::path& configPath);
+	void saveConfig();
 	void resetConfigDefaults();
 
 	void cleanUp();
@@ -85,7 +88,6 @@ private:
 	// std::unordered_map<std::string, std::variant>
 
 	Window m_window;
-	SceneManager m_sceneManager;
 	PathFinder m_pf;
 
 	configMap m_config;

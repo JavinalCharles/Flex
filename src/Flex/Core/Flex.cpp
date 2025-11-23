@@ -26,20 +26,20 @@ Flex::~Flex() {
 	cleanUp();
 }
 
-void flex::setDefaultConfigFunction(std::function<void(configMap&)> callable) {
+void Flex::setDefaultConfigFunction(std::function<void(configMap&)> callable) {
 	m_defaultConfigFunction = callable;
 }
 
-void flex::init() {
+void Flex::init() {
 	resetConfigDefaults();
 }
 
-void flex::init(const std::string& configFile) {
+void Flex::init(const std::string& configFile) {
 	resetConfigDefaults();
 	init(fs::path(configFile));
 }
 
-void flex::init(const std::filesystem::path& configPath) {
+void Flex::init(const std::filesystem::path& configPath) {
 	std::optional<fs::path> p = m_pf.find(configPath);
 	if (!p.has_value())
 		return;
@@ -61,14 +61,12 @@ inline void preciseSleep(double seconds) {
 	}
 }
 
-void flex::run() {
-	
-	const double TARGET_FPS = 1.0 / std::get<int>(m_config["framerate_limit"]);
-	const double TARGET_FRAME_TIME = 1.0 / TARGET_FPS;
+void Flex::run() {
+	const int FPS_LIMIT = getFPSLimit();
+	const double TARGET_FRAME_TIME = 1.0 / static_cast<double>(FPS_LIMIT);
 	sf::Clock clock;
 	
 	auto previous = std::chrono::steady_clock::now();
-	
 	m_isRunning = true;
 
 	while (m_window.isOpen()) {
@@ -97,9 +95,10 @@ void flex::run() {
 
 	m_isRunning = false;
 	m_window.close();
+	saveConfig();
 }
 
-void flex::handleEvents() {
+void Flex::handleEvents() {
 	m_window.getRenderWindow().handleEvents(
 		[&](const sf::Event::Closed&) {
 			m_window.close();
@@ -122,29 +121,36 @@ void flex::handleEvents() {
 	);
 }
 
-void flex::update(double dt) {
+void Flex::update(double dt) {
 	// Update game logic here
 }
 
-void flex::postUpdate(double dt) {
+void Flex::postUpdate(double dt) {
 	// Post-update logic here
 }
 
-void flex::draw() {
+void Flex::draw() {
+	if (!m_window.isOpen())
+		return;
 	sf::RenderWindow& window = m_window.getRenderWindow();
 	window.clear(sf::Color::Black);
 	// Draw your game objects here
 	window.display();
 }
 
+int Flex::getFPSLimit() const {
+	auto it = m_config.find("window_framerate_limit");
+	return it != m_config.end() && std::holds_alternative<int>(it->second) ? std::get<int>(it->second) : 60;
+}
 
-void flex::resetConfigDefaults() {
+
+void Flex::resetConfigDefaults() {
 	if (m_defaultConfigFunction != nullptr) {
 		m_defaultConfigFunction(m_config);
 	}
 }
 
-void flex::readAndMapConfigs(const fs::path& configPath) {
+void Flex::readAndMapConfigs(const fs::path& configPath) {
 	tinyxml2::XMLError err = m_xmlDoc.LoadFile(configPath.string().c_str());
 	if (err != tinyxml2::XML_SUCCESS) {
 		std::cerr << "Error: Unable to load config file: " << configPath << std::endl;
@@ -158,11 +164,63 @@ void flex::readAndMapConfigs(const fs::path& configPath) {
 	// Example: Parse key-value pairs from XML
 	for (tinyxml2::XMLElement* elem = root->FirstChildElement("config"); elem != nullptr; elem = elem->NextSiblingElement("config")) {
 		const char* key = elem->Attribute("key");
-		int value = elem->IntAttribute("value");
-		if (key) {
-			m_config[key] = value;
+		if (key == nullptr) {
+			continue;
+		}
+
+		const std::string strKey(key);
+	
+		int* intValue = nullptr;
+		double* doubleValue = nullptr;
+		const char* strValue = nullptr;
+		if (elem->QueryIntAttribute("value", intValue) == tinyxml2::XML_SUCCESS) {
+			m_config.insert_or_assign(strKey, *intValue);
+		}
+		else if (elem->QueryDoubleAttribute("value", doubleValue) == tinyxml2::XML_SUCCESS) {
+			m_config.insert_or_assign(strKey, *doubleValue);
+		}
+		else if (elem->QueryStringAttribute(key, &strValue) == tinyxml2::XML_SUCCESS) {
+			m_config.insert_or_assign(strKey, std::string(strValue));
 		}
 	}
+	m_config["config_path"] = configPath.string();
+}
+
+namespace {
+	struct ConfigValueVisitor {
+		std::string operator()(int value) {
+			return std::to_string(value);
+		}
+		std::string operator()(double value) {
+			return std::to_string(value);
+		}
+		std::string operator()(const std::string& value) {
+			return value;
+		}
+	};
+}
+
+void Flex::saveConfig() {
+	auto it = m_config.find("config_path");
+	if (it == m_config.end() || !std::holds_alternative<std::string>(it->second))
+		return;
+
+	const std::string configLoc = std::get<std::string>(it->second);
+	m_config.erase(it);
+
+	tinyxml2::XMLDocument newXMLDocument;
+	tinyxml2::XMLElement* newRoot = static_cast<tinyxml2::XMLElement*>(m_xmlDoc.RootElement()->ShallowClone(&newXMLDocument));
+
+	ConfigValueVisitor visitor;
+
+	for (const auto& [key, v] : m_config) {
+		tinyxml2::XMLElement* elem = newRoot->InsertNewChildElement("config");
+		std::string value = std::visit(visitor, v);
+		elem->SetAttribute("key", key.c_str());
+		elem->SetAttribute("value", value.c_str());
+	}
+
+	newXMLDocument.SaveFile(configLoc.c_str());
 }
 
 } // namespace flex

@@ -26,5 +26,5 @@ const PathFinderError& pathFinderError();
 
 namespace std {
     template <>
-    struct std::is_error_code_enum<Flex::PFErrorCode> : std::true_type {};
+    struct std::is_error_code_enum<flex::PFErrorCode> : std::true_type {};
 }
