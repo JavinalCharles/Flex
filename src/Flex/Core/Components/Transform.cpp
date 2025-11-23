@@ -1,8 +1,8 @@
 #include "Flex/Core/Components/Transform.hpp"
 
-using Flex::Component;
-using Flex::EntityID;
-using Flex::Transform;
+using flex::Component;
+using flex::EntityID;
+using flex::Transform;
 
 Transform::Transform(EntityID id) :
 	Component(id),

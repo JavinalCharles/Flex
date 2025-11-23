@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <filesystem>
 
-std::string Flex::getBasePath() {
+std::string flex::getBasePath() {
     std::filesystem::path exePath;
 
 #ifdef _WIN32
@@ -36,7 +36,7 @@ std::string Flex::getBasePath() {
 }
 
 
-std::string Flex::getPrefPath(const std::string& org, const std::string& app) {
+std::string flex::getPrefPath(const std::string& org, const std::string& app) {
     std::filesystem::path path;
 
 #ifdef _WIN32

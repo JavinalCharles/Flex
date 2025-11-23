@@ -1,7 +1,7 @@
 #include "Flex/Core/Components/Velocity2D.hpp"
 #include "SFML/System/Vector2.hpp"
 
-using Flex::Velocity2D;
+using flex::Velocity2D;
 
 Velocity2D::~Velocity2D() { }
 

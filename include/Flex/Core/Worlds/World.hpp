@@ -15,7 +15,7 @@
 #include "Flex/Resources/ResourceManager.hpp"
 #include "Flex/Scenes/SceneManager.hpp"
 
-namespace Flex {
+namespace flex {
 	using ComponentSet 			= std::unordered_set<std::type_index>;
 	using EntityComponentArray 	= std::vector<ComponentSet>;
 	using PoolMap 				= std::unordered_map<std::type_index, std::unique_ptr<ComponentPoolInterface>>;
@@ -176,4 +176,4 @@ namespace Flex {
 	void World::handleEvent(const ET& event) {
 		m_sceneManager.handleEvent(event);
 	}
-} // namespace Flex
+} // namespace flex

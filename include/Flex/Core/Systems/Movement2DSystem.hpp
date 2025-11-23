@@ -3,7 +3,7 @@
 #include "Flex/Core/Systems/Systems.hpp"
 #include "Flex/Core/Worlds/World.hpp"
 
-namespace Flex {
+namespace flex {
 	class Movement2DSystem : public System {
 		public:
 			explicit constexpr Movement2DSystem(World* world) :
@@ -15,4 +15,4 @@ namespace Flex {
 			
 		private:
 	}; // class Movement2DSystem
-} // namespace Flex
+} // namespace flex

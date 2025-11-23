@@ -7,7 +7,7 @@
 
 #include "Flex/Events/Types/Event.hpp"
 
-namespace Flex {
+namespace flex {
 	class EventManager {
 		public:
 			EventManager();
@@ -63,4 +63,4 @@ namespace Flex {
 			std::unordered_map<std::type_index, std::vector<std::function<void(const EventBase&)>>> m_subscribers;
 
 	}; // class EventManager
-} // namespace Flex
+} // namespace flex

@@ -1,5 +1,5 @@
 #include "Flex/Core/Components/Component.hpp"
 
-using Flex::Component;
+using flex::Component;
 
 Component::~Component() = default;

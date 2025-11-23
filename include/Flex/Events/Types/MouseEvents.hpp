@@ -5,7 +5,7 @@
 #include "Flex/Events/Types/Event.hpp"
 #include "Flex/Utilities//Utility.hpp"
 
-namespace Flex {
+namespace flex {
 	struct MouseButtonPressedEvent : public Event<MouseButtonPressedEvent> {
 		ID_t			button{};
 		sf::Vector2i 	position{};
@@ -63,4 +63,4 @@ namespace Flex {
 			position(sfe.position)
 		{ }
 	};
-} // namespace Flex
+} // namespace flex

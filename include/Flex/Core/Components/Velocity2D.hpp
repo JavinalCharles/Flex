@@ -6,7 +6,7 @@
 #include "Flex/Core/Components/Component.hpp"
 #include "Flex/Core/Entities/Entity.hpp"
 
-namespace Flex {
+namespace flex {
 	/// 
 	/// @brief Velocity2D represent an Entity's velocity in a 2D plane.
 	/// 
@@ -70,4 +70,4 @@ namespace Flex {
 			/// @brief Current velocity of the entity.
 			sf::Vector2f 	m_velocity{};
 	}; // class Velocity
-} // namespace Flex
+} // namespace flex

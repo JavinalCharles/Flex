@@ -6,7 +6,7 @@
 #include "Flex/Core/Entities/Entity.hpp"
 #include "Flex/Utilities/Utility.hpp"
 
-namespace Flex {
+namespace flex {
 	class Sprite : public Drawable {
 		public:
 			Sprite(EntityID ID, const sf::Texture& texture);
@@ -21,4 +21,4 @@ namespace Flex {
 		private:
 			sf::Sprite m_sprite;
 	}; // class Sprite
-} // namespace Flex
+} // namespace flex

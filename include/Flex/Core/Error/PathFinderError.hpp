@@ -3,7 +3,7 @@
 #include <string>
 #include <system_error>
 
-namespace Flex {
+namespace flex {
 
 enum class PFErrorCode : int {
 	PF_NO_ERROR = 0,
@@ -22,7 +22,7 @@ public:
 
 const PathFinderError& pathFinderError();
 
-} // namespace Flex
+} // namespace flex
 
 namespace std {
     template <>

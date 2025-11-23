@@ -3,7 +3,7 @@
 #include "Flex/Core//Components//Transform.hpp"
 #include "Flex/Core/Components/Velocity2D.hpp"
 
-using namespace Flex;
+using namespace flex;
 
 Movement2DSystem::~Movement2DSystem() = default;
 

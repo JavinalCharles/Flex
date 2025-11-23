@@ -1,6 +1,6 @@
 #include "Flex/Core/Components/Drawable.hpp"
 
-using namespace Flex;
+using namespace flex;
 
 Drawable::Drawable(EntityID ID) : Component(ID) { }
 

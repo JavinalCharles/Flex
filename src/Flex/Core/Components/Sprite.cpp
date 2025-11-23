@@ -1,7 +1,7 @@
 #include "Flex/Core/Components/Sprite.hpp"
 #include "Flex/Core/Entities/Entity.hpp"
 
-namespace Flex {
+namespace flex {
 	Sprite::Sprite(EntityID ID, const sf::Texture& texture) :
 		Flex::Drawable(ID), m_sprite(texture)
 	{

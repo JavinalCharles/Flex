@@ -1,8 +1,8 @@
 #include <Flex/Core/Error/PathFinderError.hpp>
 
-using namespace Flex;
+using namespace flex;
 
-const PathFinderError& Flex::pathFinderError() {
+const PathFinderError& flex::pathFinderError() {
 	static PathFinderError instance;
 	return instance;
 }

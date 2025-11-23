@@ -9,7 +9,7 @@
 
 #include "Flex/Utilities/Utility.hpp"
 
-namespace Flex {
+namespace flex {
 
 class Window {
 public:
@@ -35,7 +35,7 @@ public:
     const sf::RenderWindow& getRenderWindow() const;
 private:
 	template <typename R>
-	R getFromKeyOrDefault(const Flex::configMap& configs, const std::string& KEY, const R& defaultValue) {
+	R getFromKeyOrDefault(const flex::configMap& configs, const std::string& KEY, const R& defaultValue) {
 		return configs.contains(KEY) && std::holds_alternative<R>(configs.at(KEY))
 			? std::get<R>(configs.at(KEY)) : defaultValue;
 	}
@@ -44,4 +44,4 @@ private:
     sf::RenderWindow m_window;
 }; // class Window
 
-} // namespace Flex
+} // namespace flex

@@ -3,7 +3,7 @@
 #include "Flex/Events/Types/Event.hpp"
 #include "Flex/Utilities//Utility.hpp"
 
-namespace Flex {
+namespace flex {
 	enum KeyEventMod {
 		NO_MOD 		= 0,
 		ALT_MOD 	= 0b1,
@@ -55,4 +55,4 @@ namespace Flex {
 			)
 		{ }
 	}; // struct KeyReleasedEvent
-} // namespace Flex
+} // namespace flex

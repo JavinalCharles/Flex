@@ -11,7 +11,7 @@
 #include <limits.h>
 #endif
 
-namespace Flex {
+namespace flex {
     std::string getBasePath();
     std::string getPrefPath(const std::string& org, const std::string& app);
-} // namespace Flex
+} // namespace flex

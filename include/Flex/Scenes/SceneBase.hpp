@@ -10,7 +10,7 @@
 #include "Flex/Events/EventManager.hpp"
 #include "Flex/Window/Window.hpp"
 
-namespace Flex {
+namespace flex {
 
 	class SceneBase {
 		public:
@@ -46,4 +46,4 @@ namespace Flex {
 
 	template <typename T>
 	concept SceneType = std::derived_from<T, SceneBase> && !std::is_same_v<T, SceneBase>;
-} // namespace Flex
+} // namespace flex

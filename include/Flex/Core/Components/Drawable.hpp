@@ -7,7 +7,7 @@
 #include "Flex/Core/Entities/Entity.hpp"
 #include "Flex/Utilities/Utility.hpp"
 
-namespace Flex {
+namespace flex {
 	class Drawable : public Component {
 		public:
 			explicit Drawable(EntityID ID);
@@ -22,4 +22,4 @@ namespace Flex {
 			ID16_t m_layer = 0u;
 			ID16_t m_order = 0u;
 	}; // class Drawable
-} // namespace Flex
+} // namespace flex

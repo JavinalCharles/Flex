@@ -11,7 +11,7 @@
 
 namespace fs = std::filesystem;
 
-namespace Flex {
+namespace flex {
 
 Flex::Flex() {
 	std::error_code ec;
@@ -26,20 +26,20 @@ Flex::~Flex() {
 	cleanUp();
 }
 
-void Flex::setDefaultConfigFunction(std::function<void(configMap&)> callable) {
+void flex::setDefaultConfigFunction(std::function<void(configMap&)> callable) {
 	m_defaultConfigFunction = callable;
 }
 
-void Flex::init() {
+void flex::init() {
 	resetConfigDefaults();
 }
 
-void Flex::init(const std::string& configFile) {
+void flex::init(const std::string& configFile) {
 	resetConfigDefaults();
 	init(fs::path(configFile));
 }
 
-void Flex::init(const std::filesystem::path& configPath) {
+void flex::init(const std::filesystem::path& configPath) {
 	std::optional<fs::path> p = m_pf.find(configPath);
 	if (!p.has_value())
 		return;
@@ -61,7 +61,7 @@ inline void preciseSleep(double seconds) {
 	}
 }
 
-void Flex::run() {
+void flex::run() {
 	
 	const double TARGET_FPS = 1.0 / std::get<int>(m_config["framerate_limit"]);
 	const double TARGET_FRAME_TIME = 1.0 / TARGET_FPS;
@@ -99,7 +99,7 @@ void Flex::run() {
 	m_window.close();
 }
 
-void Flex::handleEvents() {
+void flex::handleEvents() {
 	m_window.getRenderWindow().handleEvents(
 		[&](const sf::Event::Closed&) {
 			m_window.close();
@@ -122,15 +122,15 @@ void Flex::handleEvents() {
 	);
 }
 
-void Flex::update(double dt) {
+void flex::update(double dt) {
 	// Update game logic here
 }
 
-void Flex::postUpdate(double dt) {
+void flex::postUpdate(double dt) {
 	// Post-update logic here
 }
 
-void Flex::draw() {
+void flex::draw() {
 	sf::RenderWindow& window = m_window.getRenderWindow();
 	window.clear(sf::Color::Black);
 	// Draw your game objects here
@@ -138,13 +138,13 @@ void Flex::draw() {
 }
 
 
-void Flex::resetConfigDefaults() {
+void flex::resetConfigDefaults() {
 	if (m_defaultConfigFunction != nullptr) {
 		m_defaultConfigFunction(m_config);
 	}
 }
 
-void Flex::readAndMapConfigs(const fs::path& configPath) {
+void flex::readAndMapConfigs(const fs::path& configPath) {
 	tinyxml2::XMLError err = m_xmlDoc.LoadFile(configPath.string().c_str());
 	if (err != tinyxml2::XML_SUCCESS) {
 		std::cerr << "Error: Unable to load config file: " << configPath << std::endl;
@@ -165,4 +165,4 @@ void Flex::readAndMapConfigs(const fs::path& configPath) {
 	}
 }
 
-} // namespace Flex
+} // namespace flex

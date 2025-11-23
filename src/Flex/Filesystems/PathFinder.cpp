@@ -1,7 +1,7 @@
 #include <Flex/Filesystems/PathFinder.hpp>
 #include <iostream>
 
-using namespace Flex;
+using namespace flex;
 namespace fs = std::filesystem;
 
 namespace {

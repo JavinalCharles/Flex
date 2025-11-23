@@ -9,7 +9,7 @@
 #include "Flex/Core/Components/Component.hpp"
 #include "Flex/Core/Entities/Entity.hpp"
 
-namespace Flex {
+namespace flex {
 	class ComponentPoolInterface {
 		public:
 			virtual ~ComponentPoolInterface();
@@ -87,4 +87,4 @@ namespace Flex {
 			std::vector<EntityID>						m_indexToEntity;
 	}; // class ComponentPool
 
-} // namespace Flex
+} // namespace flex

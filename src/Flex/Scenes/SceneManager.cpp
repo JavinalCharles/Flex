@@ -1,10 +1,10 @@
 #include "Flex/Scenes/SceneManager.hpp"
 #include "Flex/Core/Worlds/World.hpp"
 
-using Flex::SceneBase;
-using Flex::World;
+using flex::SceneBase;
+using flex::World;
 
-namespace Flex {
+namespace flex {
 	SceneManager::SceneManager(World* containingWorld) :
 		m_containingWorld(containingWorld)
 	{
@@ -61,4 +61,4 @@ namespace Flex {
 
 		return true;
 	}
-} // namespace Flex
+} // namespace flex

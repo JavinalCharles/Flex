@@ -4,10 +4,10 @@
 
 #include "Flex/Core/Components/Component.hpp"
 
-namespace Flex {
+namespace flex {
 	class Transform : public Component, public sf::Transformable {
 		public:
 			Transform(EntityID ownerID);
 			virtual ~Transform();
 	}; // class Transform
-} // namespace Flex
+} // namespace flex

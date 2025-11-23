@@ -4,7 +4,7 @@
 #include "Flex/Window/Window.hpp" // IWYU pragma: keep
 
 
-using namespace Flex;
+using namespace flex;
 
 // SharedContext::SharedContext() = default;
 

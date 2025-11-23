@@ -9,7 +9,7 @@
 using std::filesystem::path;
 using std::string;
 
-namespace Flex {
+namespace flex {
 
 /**
  * @brief An object that finds path in the file system.
@@ -103,4 +103,4 @@ private:
 	static std::vector<path> s_commonDirs;
 }; // class PathFinder
 
-} // namespace Flex
+} // namespace flex

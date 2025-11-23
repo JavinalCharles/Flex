@@ -5,7 +5,7 @@
 
 #include "Flex/Core/Entities/Entity.hpp"
 
-namespace Flex {
+namespace flex {
 
 	/// 
 	/// @brief Component serves as a base class for other components.
@@ -48,4 +48,4 @@ namespace Flex {
 	concept ComponentType = 
 		std::derived_from<C, Component> && !std::is_same_v<Component, C>;
 
-} // namespace Flex
+} // namespace flex

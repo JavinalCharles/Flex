@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Flex {
+namespace flex {
 
 class EventManager;
 class SceneManager;
@@ -22,4 +22,4 @@ struct SharedContext {
 	SharedContext& operator=(const SharedContext& other);
 }; // struct SharedContext
 
-} // namespace Flex
+} // namespace flex

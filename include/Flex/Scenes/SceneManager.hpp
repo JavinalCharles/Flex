@@ -13,7 +13,7 @@
 #include "Flex/Utilities/Utility.hpp"
 #include "Flex/Window/Window.hpp"
 
-namespace Flex {
+namespace flex {
 	class World;
 
 	class SceneManager {
@@ -77,4 +77,4 @@ namespace Flex {
 			std::queue<ID_t>	m_unusedSceneID;
 	}; // class SceneManager
 
-} // namespace Flex
+} // namespace flex

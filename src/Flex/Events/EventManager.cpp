@@ -1,6 +1,6 @@
 #include "Flex/Events/EventManager.hpp"
 
-using Flex::EventManager;
+using flex::EventManager;
 
 EventManager::EventManager() = default;
 

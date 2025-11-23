@@ -9,7 +9,7 @@
 
 #include "Flex/Utilities/Utility.hpp"
 
-namespace Flex {
+namespace flex {
 	class IRM {
 		public:
 			virtual ~IRM();
@@ -58,4 +58,4 @@ namespace Flex {
 
 	// template <typename RM>
 	// concept ResourceManagerType = std::derived_from<RM, IResourceManager>;
-}// namespace Flex
+}// namespace flex

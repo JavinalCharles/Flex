@@ -16,22 +16,22 @@
 #include "Flex/Window/Window.hpp"
 
 namespace fs = std::filesystem;
-using Flex::Window;
+using flex::Window;
 
-namespace Flex {
+namespace flex {
 
 class Flex {
 public:
 	/**
-	 * @brief Construct a new Flex object
+	 * @brief Construct a new flex object
 	 * 
 	 */
 	/// @{
 	Flex();
 
-	Flex(const Flex&) = delete;
+	Flex(const flex&) = delete;
 	Flex(Flex&&) = delete;
-	Flex& operator=(const Flex&) = delete;
+	Flex& operator=(const flex&) = delete;
 	Flex& operator=(Flex&&) = delete;
 	/// @}
 
@@ -50,8 +50,8 @@ public:
 	void setDefaultConfigFunction(std::function<void(configMap&)> callable);
 
 	/**
-	 * @name Flex::init()
-	 * @brief initializes the Flex object in preparation for the
+	 * @name flex::init()
+	 * @brief initializes the flex object in preparation for the
 	 * game loop.
 	 * 
 	 * @param configFile filename of the config file.
@@ -92,6 +92,6 @@ private:
 	std::function<void(configMap&)> m_defaultConfigFunction;
 
 	tinyxml2::XMLDocument m_xmlDoc;
-}; // class Engine
+}; // class Flex
 
-} // namespace Flex
+} // namespace flex

@@ -1,8 +1,8 @@
 #include "Flex/Core/Worlds/World.hpp"
 
-using Flex::EntityID;
-using Flex::ID_t;
-using Flex::World;
+using flex::EntityID;
+using flex::ID_t;
+using flex::World;
 
 World::World() = default;
 

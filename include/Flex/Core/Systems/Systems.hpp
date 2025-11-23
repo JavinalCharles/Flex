@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Flex {
+namespace flex {
 	class World;
 
 	class System {
@@ -18,4 +18,4 @@ namespace Flex {
 		protected:
 			[[maybe_unused]] World* m_world = nullptr;
 	}; // class System
-} // namespace Flex
+} // namespace flex

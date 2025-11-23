@@ -1,5 +1,5 @@
 #include "Flex/Core/Components/ComponentPool.hpp"
 
-using Flex::ComponentPoolInterface;
+using flex::ComponentPoolInterface;
 
 ComponentPoolInterface::~ComponentPoolInterface() = default;

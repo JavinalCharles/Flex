@@ -1,6 +1,6 @@
 #include "Flex/Window/Window.hpp"
 
-using Flex::Window;
+using flex::Window;
 
 Window::Window() = default;
 
